@@ -1,12 +1,9 @@
 name: Update Pokémon Releases
 
 on:
-  # Run once per day at 6am AEST (8pm UTC)
-  schedule:
-    - cron: "0 20 * * *"
-
-  # Allow manual trigger from the GitHub Actions UI
   workflow_dispatch:
+  schedule:
+    - cron: "0 22 * * 1,4"
 
 permissions:
   contents: write
