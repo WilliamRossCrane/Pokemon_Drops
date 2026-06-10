@@ -260,6 +260,59 @@ git commit -m "ci: add GitHub Actions workflow for daily release updates"
 
 git add README.md
 git commit -m "docs: add README with setup, deployment, and contributing guide"
+
+---
+
+## Phase 4 — Real source extraction
+
+This project ships with a safe, conservative data pipeline. Phase 4 improves
+real public data extraction one source at a time while prioritising safety and
+reliability.
+
+Key points:
+
+- The pipeline uses `scripts/sources/*` adapters. Each adapter should fetch only
+  public pages and return `Partial<PokemonRelease>[]`.
+- Adapters must not bypass CAPTCHAs, logins, or bot protection.
+- Use `fetchPage()` (from `scripts/utils`) which sets a clear User-Agent and
+  enforces polite delays between requests.
+- If parsing fails or a site blocks access, adapters should fall back to curated
+  data and log the reason.
+- The update script supports `--dry-run` which fetches and normalises data but
+  does not write files.
+
+How to add a Phase 4 adapter:
+
+1. Create `scripts/sources/mySource.ts` exporting an async function returning
+   `Partial<PokemonRelease>[]`.
+2. Use `import { fetchPage, logger } from "../utils/index.js"` to fetch pages
+   and log results.
+3. Attempt lightweight parsing (JSON-LD or small HTML snippets). If parsing
+   fails, return curated fallback data and log the issue.
+4. Add your adapter to `scripts/sources/index.ts` so the main script picks it up.
+
+Running the update script with dry-run:
+
+```bash
+# dry run — fetch and normalise, but do not write JSON
+npm run update:releases -- --dry-run
+```
+
+Why some adapters are conservative
+
+- Many retailer sites are JavaScript-heavy (rendered client-side) or explicitly
+  block automated requests. Building fragile scrapers for these pages leads to
+  frequent breakages. The recommended approach is:
+  - Prefer official sources (Pokemon product pages, Pokemon Center)
+  - Use JSON-LD or clearly structured HTML where available
+  - Fall back to curated entries when scraping is not feasible
+
+Ethical scraping summary
+
+- Respect `robots.txt` and site terms of use
+- Use clear `User-Agent` and polite request pacing
+- Do not attempt to bypass technical protections
+
 ```
 
 ---

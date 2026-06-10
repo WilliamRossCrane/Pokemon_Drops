@@ -12,7 +12,7 @@
  */
 
 import type { PokemonRelease } from "../../src/types/release.js";
-import { logger } from "../utils/logger.js";
+import { logger, fetchPage } from "../utils/index.js";
 
 // ─── Shared adapter interface ────────────────────────────────────────────────
 
@@ -37,10 +37,61 @@ export type SourceAdapter = () => Promise<Partial<PokemonRelease>[]>;
  *   changing any other part of the codebase.
  */
 export async function pokemonOfficial(): Promise<Partial<PokemonRelease>[]> {
-  logger.info("pokemonOfficial: using curated static data (Phase 1)");
+  const SOURCE_URL = "https://www.pokemon.com/en/pokemon-tcg/product-line/";
+  logger.info("pokemonOfficial: attempting to fetch official product page");
+
+  const html = await fetchPage(SOURCE_URL);
+
+  if (html) {
+    try {
+      // Try to extract JSON-LD blocks which sometimes contain product data
+      const ldMatches = Array.from(html.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi));
+      const parsed: any[] = [];
+      for (const m of ldMatches) {
+        try {
+          const j = JSON.parse(m[1]);
+          if (Array.isArray(j)) parsed.push(...j);
+          else parsed.push(j);
+        } catch (e) {
+          // ignore JSON parse errors for individual blocks
+        }
+      }
+
+      const products: Partial<PokemonRelease>[] = [];
+      for (const obj of parsed) {
+        // Look for items that resemble product or event data
+        if (!obj || typeof obj !== "object") continue;
+        const name = obj.name || obj.headline || obj.title;
+        const date = obj.releaseDate || obj.datePublished || obj.dateCreated;
+        if (name && date) {
+          products.push({
+            name: String(name),
+            productType: "Other",
+            releaseDate: String(date).split("T")[0],
+            region: "Global",
+            availabilityStatus: "announced",
+            sourceUrls: [SOURCE_URL],
+            retailersToCheck: [],
+            confidence: "high",
+          });
+        }
+      }
+
+      if (products.length > 0) {
+        logger.success(`pokemonOfficial: parsed ${products.length} products from JSON-LD`);
+        return products;
+      }
+    } catch (err) {
+      logger.warn("pokemonOfficial: JSON-LD parsing failed, falling back to curated data");
+    }
+  } else {
+    logger.skip("pokemonOfficial", "Failed to fetch official page — using curated data");
+  }
+
+  logger.info("pokemonOfficial: using curated static data (fallback)");
 
   // These are publicly known upcoming releases as of the script's last edit.
-  // In Phase 4, replace this with real page parsing.
+  // Kept as a conservative fallback when direct parsing isn't available.
   const known: Partial<PokemonRelease>[] = [
     {
       name: "Terastal Festival ex Elite Trainer Box",
@@ -102,6 +153,6 @@ export async function pokemonOfficial(): Promise<Partial<PokemonRelease>[]> {
     },
   ];
 
-  logger.success(`pokemonOfficial: returned ${known.length} products`);
+  logger.success(`pokemonOfficial: returned ${known.length} products (fallback)`);
   return known;
 }

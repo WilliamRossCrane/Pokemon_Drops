@@ -14,12 +14,14 @@
  * If a source fails, the script logs the error and continues with the others.
  */
 
-import { writeFileSync, mkdirSync } from "fs";
+import { mkdirSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 
 import type { PokemonRelease } from "../src/types/release.js";
-import { normaliseProduct, deduplicateReleases } from "./utils/index.js";
+import { normaliseProduct } from "./utils/index.js";
+import { deduplicateReleases } from "./utils/index.js";
+import { writeJsonIfChanged } from "./utils/index.js";
 import { logger } from "./utils/index.js";
 import { SOURCE_ADAPTERS } from "./sources/index.js";
 
@@ -30,6 +32,9 @@ const OUTPUT_PATH = resolve(__dirname, "../src/data/releases.generated.json");
 async function main() {
   logger.info("=== Pokémon TCG GC Tracker — Release Update Script ===");
   logger.info(`Running ${SOURCE_ADAPTERS.length} source adapters`);
+
+  const dryRun = process.argv.includes("--dry-run") || process.env.DRY_RUN === "1";
+  if (dryRun) logger.info("Dry run mode: will not write output file");
 
   const allRaw: Partial<PokemonRelease>[] = [];
   const errors: string[] = [];
@@ -70,9 +75,13 @@ async function main() {
   };
 
   mkdirSync(dirname(OUTPUT_PATH), { recursive: true });
-  writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2), "utf-8");
-
-  logger.success(`Written ${sorted.length} releases to ${OUTPUT_PATH}`);
+  if (dryRun) {
+    logger.info(`Dry run: ${sorted.length} releases collected — not writing file`);
+  } else {
+    const changed = writeJsonIfChanged(OUTPUT_PATH, output);
+    if (changed) logger.success(`Updated ${OUTPUT_PATH} with ${sorted.length} releases`);
+    else logger.info(`No changes to ${OUTPUT_PATH}`);
+  }
 
   if (errors.length > 0) {
     logger.warn(`${errors.length} adapter(s) had errors — see above`);
