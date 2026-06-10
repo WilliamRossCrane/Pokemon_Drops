@@ -2,12 +2,16 @@
 import type { PokemonRelease } from "../types/release";
 import ConfidenceBadge from "./ConfidenceBadge.astro";
 import StatusBadge from "./StatusBadge.astro";
+import PredictionBadge from "./PredictionBadge.astro";
+import { predictRetailers } from "../utils/predictRetailers";
 
 interface Props {
   release: PokemonRelease;
 }
 
 const { release } = Astro.props;
+const predictions = predictRetailers(release);
+const topPredictions = predictions.slice(0, 2);
 
 const releaseDate = release.releaseDate
   ? new Date(release.releaseDate).toLocaleDateString("en-AU", {
@@ -59,6 +63,23 @@ const isUpcoming =
         <span class="text-gray-600 text-xs">Date TBC</span>
       )}
     </div>
+
+    {topPredictions.length > 0 && (
+      <div class="mt-4 rounded-3xl border border-white/[0.08] bg-surface p-4 text-sm text-gray-300">
+        <div class="mb-3 text-xs uppercase tracking-[0.24em] text-gray-500">Best predicted checks</div>
+        <div class="space-y-3">
+          {topPredictions.map((prediction) => (
+            <div class="flex flex-col gap-2">
+              <div class="flex items-center justify-between gap-3">
+                <p class="text-sm text-white">{prediction.retailerName} — {prediction.predictedCheckDay}</p>
+                <PredictionBadge likelihood={prediction.likelihood} />
+              </div>
+              <p class="text-xs text-gray-400">{prediction.reason}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
 
     <!-- Retailers -->
     {release.retailersToCheck.length > 0 && (

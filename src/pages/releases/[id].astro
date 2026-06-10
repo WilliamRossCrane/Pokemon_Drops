@@ -3,6 +3,8 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import ConfidenceBadge from "../../components/ConfidenceBadge.astro";
 import StatusBadge from "../../components/StatusBadge.astro";
 import Countdown from "../../components/Countdown.astro";
+import RetailerPredictionCard from "../../components/RetailerPredictionCard.astro";
+import { predictRetailers } from "../../utils/predictRetailers";
 import type { PokemonRelease } from "../../types/release";
 import releasesData from "../../data/releases.generated.json";
 
@@ -20,6 +22,7 @@ interface Props {
 }
 
 const { release } = Astro.props;
+const predictions = predictRetailers(release);
 
 const isUpcoming = release.releaseDate
   ? new Date(release.releaseDate) > new Date()
@@ -179,6 +182,33 @@ function formatChecked(dateStr: string) {
         )}
       </div>
     </div>
+
+    {predictions.length > 0 ? (
+      <div class="card p-5 mb-6">
+        <h2 class="font-display font-bold text-white text-sm uppercase tracking-wider mb-3">
+          Where to check based on previous releases
+        </h2>
+        <p class="text-gray-400 text-sm mb-5">
+          These predictions are based on previous release patterns, not confirmed stock.
+          Always check the retailer directly before travelling or buying.
+        </p>
+        <div class="grid gap-4">
+          {predictions.map((prediction) => (
+            <RetailerPredictionCard prediction={prediction} />
+          ))}
+        </div>
+      </div>
+    ) : (
+      <div class="card p-5 mb-6">
+        <h2 class="font-display font-bold text-white text-sm uppercase tracking-wider mb-2">
+          Prediction data
+        </h2>
+        <p class="text-gray-400 text-sm leading-relaxed">
+          No matching previous release patterns are stored for this product type yet.
+          You can add patterns in <code class="text-xs text-gray-200">src/data/previous-release-patterns.json</code>.
+        </p>
+      </div>
+    )}
 
     <!-- Notes -->
     {release.notes && (

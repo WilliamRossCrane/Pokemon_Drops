@@ -34,25 +34,43 @@ Prioritises Gold Coast stores, then Brisbane / SEQ, then Australian online retai
 
 ## How it works
 
-```
-GitHub Actions (daily)
-    │
-    ▼
-scripts/update-releases.ts
-    │  Calls each source adapter
-    │  Normalises & deduplicates products
-    │  Writes to ↓
-    ▼
-src/data/releases.generated.json
-    │
-    ▼
-Astro build → static HTML
-    │
-    ▼
-Live website reads the JSON at build time
+- `src/data/releases.generated.json` contains future Pokémon TCG release data.
+- `src/data/previous-release-patterns.json` contains simple historical retailer patterns.
+- `src/utils/predictRetailers.ts` reads the patterns and generates retailer predictions based on product type and release weekday.
+- Astro renders the predictions into the release list and release detail pages at build time.
+
+This site is intentionally simple:
+- no live stock checking
+- no backend database
+- no complicated observation engine
+- predictions are based on previous release patterns, not confirmed stock
+
+---
+
+## Adding a new previous release pattern
+
+Open `src/data/previous-release-patterns.json` and add a new object with your observed retailer pattern. Example:
+
+```json
+{
+  "id": "bigw-etb-wednesday-pattern",
+  "retailerId": "big-w",
+  "retailerName": "Big W",
+  "productType": "Elite Trainer Box",
+  "previousProductName": "Mega Evolution Elite Trainer Box",
+  "previousSetName": "Mega Evolution",
+  "previousReleaseDate": "2026-03-12",
+  "previousDropDay": "Wednesday",
+  "typicalWindow": "release week",
+  "evidence": "Similar ETB-style products were previously seen at Big W on Wednesday around release week."
+}
 ```
 
-The site is fully static — no backend, no database, no live server required.
+Then rebuild the site with:
+
+```bash
+npm run build
+```
 
 ---
 

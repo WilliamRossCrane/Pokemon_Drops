@@ -1,0 +1,30 @@
+---
+import type { RetailerPrediction } from "../types/release";
+import PredictionBadge from "./PredictionBadge.astro";
+interface Props {
+  prediction: RetailerPrediction;
+}
+const { prediction } = Astro.props;
+---
+<div class="border border-white/[0.08] rounded-3xl bg-surface p-5">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+    <div>
+      <p class="font-semibold text-white">{prediction.retailerName}</p>
+      <p class="text-xs text-gray-400 mt-1">{prediction.predictedCheckDay} · {prediction.predictedWindow}</p>
+    </div>
+    <PredictionBadge likelihood={prediction.likelihood} />
+  </div>
+  <p class="mt-4 text-sm text-gray-300">{prediction.reason}</p>
+  {prediction.matchedPatterns.length > 0 && (
+    <div class="mt-4 space-y-2 text-xs text-gray-400">
+      <p class="uppercase tracking-[0.24em] text-gray-500">Matched previous patterns</p>
+      <ul class="list-disc list-inside space-y-1">
+        {prediction.matchedPatterns.map((pattern) => (
+          <li>
+            <span class="font-medium text-gray-200">{pattern.previousProductName}</span> — {pattern.evidence}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+</div>

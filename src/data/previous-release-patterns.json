@@ -1,0 +1,38 @@
+[
+  {
+    "id": "bigw-etb-wednesday-pattern",
+    "retailerId": "big-w",
+    "retailerName": "Big W",
+    "productType": "Elite Trainer Box",
+    "previousProductName": "Mega Evolution Elite Trainer Box",
+    "previousSetName": "Mega Evolution",
+    "previousReleaseDate": "2026-03-12",
+    "previousDropDay": "Wednesday",
+    "typicalWindow": "release week",
+    "evidence": "Similar ETB-style products were previously seen at Big W on Wednesday around release week."
+  },
+  {
+    "id": "jb-hifi-collection-box-release-week-pattern",
+    "retailerId": "jb-hi-fi",
+    "retailerName": "JB Hi-Fi",
+    "productType": "Collection Box",
+    "previousProductName": "Arceus & the Masked Heroes Collection Box",
+    "previousSetName": "Arceus & the Masked Heroes",
+    "previousReleaseDate": "2026-04-18",
+    "previousDropDay": "Friday",
+    "typicalWindow": "release week",
+    "evidence": "Similar collection boxes were previously listed at JB Hi-Fi around release week."
+  },
+  {
+    "id": "ebgames-booster-box-wednesday-pattern",
+    "retailerId": "eb-games",
+    "retailerName": "EB Games",
+    "productType": "Booster Box",
+    "previousProductName": "Shining Fates Booster Box",
+    "previousSetName": "Shining Fates",
+    "previousReleaseDate": "2026-05-07",
+    "previousDropDay": "Wednesday",
+    "typicalWindow": "release week",
+    "evidence": "Similar booster boxes appeared at EB Games on Wednesdays during release week."
+  }
+]

@@ -41,8 +41,7 @@ const sorted = [...allReleases].sort((a, b) => {
     </div>
 
     <!-- Controls row -->
-    <div class="flex flex-col sm:flex-row gap-4 mb-6">
-      <!-- Type filter -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
       <div class="flex items-center gap-2 flex-wrap">
         <span class="text-xs text-gray-600 font-medium">Type:</span>
         <button class="filter-chip filter-chip-active" data-product-filter="all">All</button>
@@ -52,6 +51,9 @@ const sorted = [...allReleases].sort((a, b) => {
           </button>
         ))}
       </div>
+      <button id="toggle-past" class="status-tab px-3 py-1.5 rounded-full text-sm font-medium border bg-surface-card border-white/10 text-gray-400 hover:border-white/20" type="button">
+        Show past releases
+      </button>
     </div>
 
     <!-- Status tabs -->
@@ -113,6 +115,15 @@ const sorted = [...allReleases].sort((a, b) => {
 
   let activeProduct = "all";
   let activeStatus = "upcoming";
+  let showPast = false;
+
+  function isOldRelease(card: HTMLElement) {
+    const dateStr = card.dataset.releaseDate;
+    const status = card.dataset.status;
+    if (status === "released") return true;
+    if (!dateStr) return false;
+    return new Date(dateStr) < new Date();
+  }
 
   function isUpcoming(card: HTMLElement) {
     const dateStr = card.dataset.releaseDate;
@@ -138,7 +149,8 @@ const sorted = [...allReleases].sort((a, b) => {
         statusMatch = card.dataset.status === activeStatus;
       }
 
-      const show = productMatch && statusMatch;
+      const pastMatch = showPast || !isOldRelease(card);
+      const show = productMatch && statusMatch && pastMatch;
       card.classList.toggle("hidden", !show);
       if (show) count++;
     });
@@ -158,6 +170,8 @@ const sorted = [...allReleases].sort((a, b) => {
     });
   });
 
+  const togglePastButton = document.getElementById("toggle-past");
+
   statusTabs.forEach((tab) => {
     tab.addEventListener("click", () => {
       statusTabs.forEach((t) => {
@@ -171,6 +185,12 @@ const sorted = [...allReleases].sort((a, b) => {
       activeStatus = tab.dataset.statusTab!;
       applyFilters();
     });
+  });
+
+  togglePastButton?.addEventListener("click", () => {
+    showPast = !showPast;
+    togglePastButton.textContent = showPast ? "Hide past releases" : "Show past releases";
+    applyFilters();
   });
 
   // Initial render — show upcoming by default

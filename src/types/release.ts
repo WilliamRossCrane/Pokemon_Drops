@@ -20,6 +20,35 @@ export type AvailabilityStatus =
 
 export type Confidence = "high" | "medium" | "low";
 
+export type Likelihood =
+  | "very_likely"
+  | "likely"
+  | "possible"
+  | "unclear";
+
+export interface PreviousReleasePattern {
+  id: string;
+  retailerId: string;
+  retailerName: string;
+  productType: ProductType;
+  previousProductName: string;
+  previousSetName?: string;
+  previousReleaseDate?: string;
+  previousDropDay: string;
+  typicalWindow: string;
+  evidence: string;
+}
+
+export interface RetailerPrediction {
+  retailerId: string;
+  retailerName: string;
+  likelihood: Likelihood;
+  predictedCheckDay: string;
+  predictedWindow: string;
+  reason: string;
+  matchedPatterns: PreviousReleasePattern[];
+}
+
 export interface PokemonRelease {
   id: string;
   name: string;

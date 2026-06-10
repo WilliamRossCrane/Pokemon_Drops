@@ -1,0 +1,23 @@
+---
+import type { Likelihood } from "../types/release";
+interface Props {
+  likelihood: Likelihood;
+}
+const { likelihood } = Astro.props;
+
+const styleMap: Record<Likelihood, string> = {
+  very_likely: "bg-green-500/15 text-green-300 border-green-500/20",
+  likely: "bg-yellow-500/15 text-yellow-300 border-yellow-500/20",
+  possible: "bg-blue-500/15 text-blue-300 border-blue-500/20",
+  unclear: "bg-gray-500/15 text-gray-300 border-gray-500/20",
+};
+const labelMap: Record<Likelihood, string> = {
+  very_likely: "Very likely",
+  likely: "Likely",
+  possible: "Possible",
+  unclear: "Unclear",
+};
+---
+<span class={`inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] ${styleMap[likelihood]}`}>
+  {labelMap[likelihood]}
+</span>
