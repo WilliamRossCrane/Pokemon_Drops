@@ -1,0 +1,49 @@
+name: Update Pokémon Releases
+
+on:
+  # Run once per day at 6am AEST (8pm UTC)
+  schedule:
+    - cron: "0 20 * * *"
+
+  # Allow manual trigger from the GitHub Actions UI
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-releases:
+    name: Fetch and update release data
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run release update script
+        run: npm run update:releases
+
+      # Only commit if the generated JSON actually changed.
+      # This avoids noisy commits when nothing has changed.
+      - name: Commit updated releases (if changed)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet src/data/releases.generated.json; then
+            echo "No changes to releases.generated.json — nothing to commit."
+          else
+            git add src/data/releases.generated.json
+            git commit -m "chore(data): update releases.generated.json [skip ci]"
+            git push
+            echo "Committed and pushed updated release data."
+          fi

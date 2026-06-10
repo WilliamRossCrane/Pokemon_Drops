@@ -1,0 +1,29 @@
+---
+import type { Confidence } from "../types/release";
+import { CONFIDENCE_COLORS } from "../types/release";
+
+interface Props {
+  confidence: Confidence;
+}
+const { confidence } = Astro.props;
+
+const labels: Record<Confidence, string> = {
+  high: "High confidence",
+  medium: "Medium confidence",
+  low: "Low / rumoured",
+};
+
+const icons: Record<Confidence, string> = {
+  high: "✓",
+  medium: "~",
+  low: "?",
+};
+---
+
+<span
+  class={`badge ${CONFIDENCE_COLORS[confidence]}`}
+  title={labels[confidence]}
+>
+  <span aria-hidden="true" class="mr-0.5">{icons[confidence]}</span>
+  {confidence}
+</span>

@@ -1,0 +1,17 @@
+---
+interface Props {
+  message?: string;
+  hint?: string;
+}
+
+const {
+  message = "No releases found",
+  hint = "Try adjusting your filters",
+} = Astro.props;
+---
+
+<div class="text-center py-20 px-6">
+  <div class="text-5xl mb-4" aria-hidden="true">🔍</div>
+  <p class="text-gray-300 font-medium text-base">{message}</p>
+  <p class="text-gray-600 text-sm mt-1">{hint}</p>
+</div>

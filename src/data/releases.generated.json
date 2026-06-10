@@ -1,0 +1,129 @@
+{
+  "generatedAt": "2026-06-10T06:06:17.932Z",
+  "releaseCount": 6,
+  "releases": [
+    {
+      "id": "terastal-festival-ex-elite-trainer-box-2025-08-01",
+      "name": "Terastal Festival ex Elite Trainer Box",
+      "setName": "Terastal Festival ex (SV09)",
+      "productType": "Elite Trainer Box",
+      "releaseDate": "2025-08-01",
+      "preorderDate": "2025-06-20",
+      "region": "Australia",
+      "availabilityStatus": "preorder_live",
+      "sourceUrls": [
+        "https://www.pokemon.com/en/pokemon-tcg/product-line/",
+        "https://www.pokemoncenter.com/en-au",
+        "https://www.ebgames.com.au/games/all-games?q=pokemon+tcg&platform=pokemon-trading-card-game",
+        "https://goodgames.com.au",
+        "https://poketag.com.au"
+      ],
+      "retailersToCheck": [
+        "Good Games Gold Coast",
+        "Poketag",
+        "EB Games / Zing",
+        "Pokémon Center Australia",
+        "JB Hi-Fi"
+      ],
+      "confidence": "high",
+      "notes": "Official SV09 set. Preorders confirmed live.",
+      "lastChecked": "2026-06-10T06:06:17.931Z"
+    },
+    {
+      "id": "terastal-festival-ex-booster-box-2025-08-01",
+      "name": "Terastal Festival ex Booster Box",
+      "setName": "Terastal Festival ex (SV09)",
+      "productType": "Booster Box",
+      "releaseDate": "2025-08-01",
+      "region": "Australia",
+      "availabilityStatus": "preorder_live",
+      "sourceUrls": [
+        "https://www.pokemon.com/en/pokemon-tcg/product-line/",
+        "https://poketag.com.au"
+      ],
+      "retailersToCheck": [
+        "Poketag",
+        "Good Games Gold Coast",
+        "Pokémon Center Australia"
+      ],
+      "confidence": "high",
+      "lastChecked": "2026-06-10T06:06:17.931Z"
+    },
+    {
+      "id": "terastal-festival-ex-booster-bundle-2025-08-01",
+      "name": "Terastal Festival ex Booster Bundle",
+      "setName": "Terastal Festival ex (SV09)",
+      "productType": "Booster Bundle",
+      "releaseDate": "2025-08-01",
+      "region": "Australia",
+      "availabilityStatus": "announced",
+      "sourceUrls": [
+        "https://www.bigw.com.au"
+      ],
+      "retailersToCheck": [
+        "Big W"
+      ],
+      "confidence": "medium",
+      "notes": "Big W typically stocks booster bundles and ETBs on launch day. Check in-store.",
+      "lastChecked": "2026-06-10T06:06:17.931Z"
+    },
+    {
+      "id": "destined-rivals-elite-trainer-box-2025-11-07",
+      "name": "Destined Rivals Elite Trainer Box",
+      "setName": "Destined Rivals (SV10)",
+      "productType": "Elite Trainer Box",
+      "releaseDate": "2025-11-07",
+      "region": "Australia",
+      "availabilityStatus": "announced",
+      "sourceUrls": [
+        "https://www.pokemon.com/en/pokemon-tcg/product-line/",
+        "https://www.ebgames.com.au/games/all-games?q=pokemon+tcg&platform=pokemon-trading-card-game"
+      ],
+      "retailersToCheck": [
+        "Good Games Gold Coast",
+        "Poketag",
+        "EB Games / Zing",
+        "Big W",
+        "Pokémon Center Australia"
+      ],
+      "confidence": "high",
+      "lastChecked": "2026-06-10T06:06:17.931Z"
+    },
+    {
+      "id": "destined-rivals-booster-box-2025-11-07",
+      "name": "Destined Rivals Booster Box",
+      "setName": "Destined Rivals (SV10)",
+      "productType": "Booster Box",
+      "releaseDate": "2025-11-07",
+      "region": "Australia",
+      "availabilityStatus": "announced",
+      "sourceUrls": [
+        "https://www.pokemon.com/en/pokemon-tcg/product-line/"
+      ],
+      "retailersToCheck": [
+        "Poketag",
+        "Good Games Gold Coast",
+        "Pokémon Center Australia"
+      ],
+      "confidence": "high",
+      "lastChecked": "2026-06-10T06:06:17.931Z"
+    },
+    {
+      "id": "scarlet-violet-151-etb-possible-restock-tbc",
+      "name": "Scarlet & Violet 151 ETB — Possible Restock",
+      "setName": "Scarlet & Violet 151",
+      "productType": "Elite Trainer Box",
+      "region": "Australia",
+      "availabilityStatus": "restock_possible",
+      "sourceUrls": [
+        "https://www.kmart.com.au"
+      ],
+      "retailersToCheck": [
+        "Kmart"
+      ],
+      "confidence": "low",
+      "notes": "Kmart periodically restocks popular sets. Check in-store.",
+      "lastChecked": "2026-06-10T06:06:17.931Z"
+    }
+  ]
+}

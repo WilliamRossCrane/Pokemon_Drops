@@ -1,0 +1,223 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ReleaseCard from "../components/ReleaseCard.astro";
+import Countdown from "../components/Countdown.astro";
+import StaleDataWarning from "../components/StaleDataWarning.astro";
+import StatusBadge from "../components/StatusBadge.astro";
+import type { PokemonRelease, ProductType, AvailabilityStatus } from "../types/release";
+import releasesData from "../data/releases.generated.json";
+
+// Pull data from the generated JSON
+const allReleases: PokemonRelease[] = releasesData.releases as PokemonRelease[];
+const generatedAt: string = releasesData.generatedAt;
+
+// Find the next upcoming release (soonest future date, highest confidence first)
+const upcoming = allReleases
+  .filter((r) => r.releaseDate && new Date(r.releaseDate) > new Date())
+  .sort((a, b) => {
+    const dateSort = new Date(a.releaseDate!).getTime() - new Date(b.releaseDate!).getTime();
+    if (dateSort !== 0) return dateSort;
+    const conf: Record<string, number> = { high: 0, medium: 1, low: 2 };
+    return conf[a.confidence] - conf[b.confidence];
+  });
+
+const nextDrop = upcoming[0] ?? null;
+const featuredReleases = upcoming.slice(0, 6);
+
+// Filter chip config
+const filterChips: { label: string; value: string; type: "productType" | "status" }[] = [
+  { label: "ETB", value: "Elite Trainer Box", type: "productType" },
+  { label: "Booster Box", value: "Booster Box", type: "productType" },
+  { label: "Booster Bundle", value: "Booster Bundle", type: "productType" },
+  { label: "Collection Box", value: "Collection Box", type: "productType" },
+  { label: "Tin", value: "Tin", type: "productType" },
+  { label: "Preorder", value: "preorder_live", type: "status" },
+  { label: "Restock", value: "restock_possible", type: "status" },
+];
+---
+
+<BaseLayout title="Home">
+  <!-- ── Hero ─────────────────────────────────────────────────── -->
+  <section class="relative overflow-hidden border-b border-white/[0.06]">
+    <!-- Ambient background glow -->
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div class="absolute -top-40 -left-20 w-[500px] h-[500px] rounded-full bg-pokeblue-700/20 blur-[100px]"></div>
+      <div class="absolute -top-20 right-0 w-[400px] h-[400px] rounded-full bg-pokered-700/15 blur-[120px]"></div>
+    </div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+      <div class="max-w-2xl">
+        <!-- Eyebrow -->
+        <div class="inline-flex items-center gap-2 bg-white/[0.05] border border-white/[0.08] rounded-full px-3 py-1 mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse-slow" aria-hidden="true"></span>
+          <span class="text-xs text-gray-400 font-medium">Gold Coast, QLD, Australia</span>
+        </div>
+
+        <h1 class="font-display font-black text-4xl sm:text-5xl lg:text-6xl text-white leading-tight mb-4">
+          Pokémon TCG<br />
+          <span class="gradient-text">Drop Tracker</span>
+        </h1>
+
+        <p class="text-gray-400 text-lg leading-relaxed mb-8 max-w-lg">
+          What's dropping next, when it releases in Australia, and where to find
+          it on the Gold Coast. Updated automatically. Sources always shown.
+        </p>
+
+        <div class="flex items-center gap-3 flex-wrap">
+          <a href="/releases" class="btn-primary">View all releases →</a>
+          <a href="/stores" class="btn-ghost">Find local stores</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- ── Stale data warning ──────────────────────────────────── -->
+    <div class="mt-6">
+      <StaleDataWarning generatedAt={generatedAt} />
+    </div>
+
+    <!-- ── Next drop highlight ─────────────────────────────────── -->
+    {nextDrop && (
+      <section class="mt-10">
+        <h2 class="font-display font-bold text-white text-sm uppercase tracking-widest mb-4 text-gray-500">
+          Next drop
+        </h2>
+        <div class="card-elevated p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-8 items-center">
+          <div>
+            <div class="flex items-center gap-2 mb-3 flex-wrap">
+              <StatusBadge status={nextDrop.availabilityStatus} />
+              <span class="text-xs text-gray-600">·</span>
+              <span class="text-xs text-gray-500">{nextDrop.productType}</span>
+            </div>
+            <h3 class="font-display font-black text-white text-2xl sm:text-3xl leading-tight mb-1">
+              {nextDrop.name}
+            </h3>
+            {nextDrop.setName && (
+              <p class="text-gray-500 text-sm mb-4">{nextDrop.setName}</p>
+            )}
+            <a href={`/releases/${nextDrop.id}`} class="btn-primary mt-2">
+              See retailers & details →
+            </a>
+          </div>
+
+          <div class="sm:text-right">
+            <Countdown
+              targetDate={nextDrop.releaseDate!}
+              label="Releases in"
+            />
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- ── Filter chips ───────────────────────────────────────── -->
+    <section class="mt-10">
+      <div class="flex items-center gap-2 flex-wrap" role="group" aria-label="Filter releases">
+        <button
+          class="filter-chip filter-chip-active"
+          data-filter="all"
+          data-type="all"
+        >
+          All
+        </button>
+        {filterChips.map((chip) => (
+          <button
+            class="filter-chip filter-chip-inactive"
+            data-filter={chip.value}
+            data-type={chip.type}
+          >
+            {chip.label}
+          </button>
+        ))}
+      </div>
+    </section>
+
+    <!-- ── Release cards grid ─────────────────────────────────── -->
+    <section class="mt-6 mb-16">
+      <div
+        id="releases-grid"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+      >
+        {allReleases
+          .filter((r) => r.availabilityStatus !== "released" || r.availabilityStatus === "restock_possible")
+          .sort((a, b) => {
+            if (!a.releaseDate) return 1;
+            if (!b.releaseDate) return -1;
+            return new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime();
+          })
+          .map((release) => (
+            <div
+              class="release-card-wrapper"
+              data-product-type={release.productType}
+              data-status={release.availabilityStatus}
+            >
+              <ReleaseCard release={release} />
+            </div>
+          ))}
+      </div>
+
+      <div id="empty-state" class="hidden text-center py-20">
+        <div class="text-4xl mb-3" aria-hidden="true">🔍</div>
+        <p class="text-gray-400">No releases match that filter.</p>
+        <button class="text-pokeblue-400 text-sm mt-2 hover:underline" id="clear-filter">
+          Clear filter
+        </button>
+      </div>
+
+      <div class="mt-8 text-center">
+        <a href="/releases" class="btn-ghost">
+          View all releases including past drops →
+        </a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<script>
+  // Client-side filter chips logic
+  const chips = document.querySelectorAll<HTMLButtonElement>("[data-filter]");
+  const cards = document.querySelectorAll<HTMLElement>(".release-card-wrapper");
+  const emptyState = document.getElementById("empty-state");
+
+  function applyFilter(filterValue: string, filterType: string) {
+    let visibleCount = 0;
+
+    cards.forEach((card) => {
+      let show = false;
+      if (filterValue === "all") {
+        show = true;
+      } else if (filterType === "productType") {
+        show = card.dataset.productType === filterValue;
+      } else if (filterType === "status") {
+        show = card.dataset.status === filterValue;
+      }
+      card.classList.toggle("hidden", !show);
+      if (show) visibleCount++;
+    });
+
+    emptyState?.classList.toggle("hidden", visibleCount > 0);
+  }
+
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      chips.forEach((c) => {
+        c.classList.remove("filter-chip-active");
+        c.classList.add("filter-chip-inactive");
+      });
+      chip.classList.add("filter-chip-active");
+      chip.classList.remove("filter-chip-inactive");
+
+      applyFilter(chip.dataset.filter!, chip.dataset.type!);
+    });
+  });
+
+  document.getElementById("clear-filter")?.addEventListener("click", () => {
+    chips.forEach((c, i) => {
+      c.classList.toggle("filter-chip-active", i === 0);
+      c.classList.toggle("filter-chip-inactive", i !== 0);
+    });
+    applyFilter("all", "all");
+  });
+</script>

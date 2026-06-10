@@ -1,0 +1,29 @@
+{
+  "name": "pokemon-tcg-gold-coast-tracker",
+  "version": "1.0.0",
+  "description": "A static Pokémon TCG release and preorder tracker for Gold Coast collectors",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "update:releases": "tsx scripts/update-releases.ts",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "astro": "^4.16.0",
+    "@astrojs/tailwind": "^5.1.0",
+    "tailwindcss": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "eslint": "^8.56.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "prettier": "^3.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^2.0.0"
+  }
+}

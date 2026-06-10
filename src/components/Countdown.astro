@@ -1,0 +1,92 @@
+---
+// Countdown renders a live timer to a future ISO date string.
+// Falls back gracefully to "Released" if date is in the past.
+
+interface Props {
+  targetDate: string;   // ISO date string
+  label?: string;
+}
+
+const { targetDate, label = "Releases in" } = Astro.props;
+---
+
+<div
+  class="countdown-widget"
+  data-target={targetDate}
+  data-label={label}
+>
+  <p class="text-xs text-gray-500 mb-1">{label}</p>
+  <div class="flex items-end gap-3">
+    <div class="text-center">
+      <div class="countdown-days font-display font-black text-4xl text-white tabular-nums leading-none">--</div>
+      <div class="text-gray-500 text-xs mt-1">days</div>
+    </div>
+    <span class="text-2xl text-gray-600 mb-1 font-light">:</span>
+    <div class="text-center">
+      <div class="countdown-hours font-display font-black text-4xl text-white tabular-nums leading-none">--</div>
+      <div class="text-gray-500 text-xs mt-1">hrs</div>
+    </div>
+    <span class="text-2xl text-gray-600 mb-1 font-light">:</span>
+    <div class="text-center">
+      <div class="countdown-minutes font-display font-black text-4xl text-white tabular-nums leading-none">--</div>
+      <div class="text-gray-500 text-xs mt-1">min</div>
+    </div>
+    <span class="text-2xl text-gray-600 mb-1 font-light">:</span>
+    <div class="text-center">
+      <div class="countdown-seconds font-display font-black text-4xl text-pokered-400 tabular-nums leading-none">--</div>
+      <div class="text-gray-500 text-xs mt-1">sec</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function initCountdowns() {
+    const widgets = document.querySelectorAll<HTMLElement>(".countdown-widget");
+
+    widgets.forEach((widget) => {
+      const targetStr = widget.dataset.target;
+      if (!targetStr) return;
+
+      const target = new Date(targetStr).getTime();
+
+      const daysEl = widget.querySelector(".countdown-days");
+      const hoursEl = widget.querySelector(".countdown-hours");
+      const minsEl = widget.querySelector(".countdown-minutes");
+      const secsEl = widget.querySelector(".countdown-seconds");
+
+      function update() {
+        const now = Date.now();
+        const diff = target - now;
+
+        if (diff <= 0) {
+          if (daysEl) daysEl.textContent = "Released!";
+          if (hoursEl) hoursEl.closest(".text-center")?.classList.add("hidden");
+          if (minsEl) minsEl.closest(".text-center")?.classList.add("hidden");
+          if (secsEl) secsEl.closest(".text-center")?.classList.add("hidden");
+          // Hide the colons too
+          widget.querySelectorAll(".font-light").forEach((el) => {
+            (el as HTMLElement).style.display = "none";
+          });
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        if (daysEl) daysEl.textContent = String(days).padStart(2, "0");
+        if (hoursEl) hoursEl.textContent = String(hours).padStart(2, "0");
+        if (minsEl) minsEl.textContent = String(mins).padStart(2, "0");
+        if (secsEl) secsEl.textContent = String(secs).padStart(2, "0");
+      }
+
+      update();
+      setInterval(update, 1000);
+    });
+  }
+
+  // Run on page load and after navigation
+  initCountdowns();
+  document.addEventListener("astro:after-swap", initCountdowns);
+</script>

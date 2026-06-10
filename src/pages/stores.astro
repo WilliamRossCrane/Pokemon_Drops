@@ -1,0 +1,60 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import StoreCard from "../components/StoreCard.astro";
+import { stores } from "../data/stores.config";
+import type { StoreRegion } from "../types/store";
+import { REGION_ORDER } from "../types/store";
+
+// Group stores by region in a stable order
+const byRegion = REGION_ORDER.map((region) => ({
+  region,
+  stores: stores.filter((s) => s.region === region),
+})).filter((g) => g.stores.length > 0);
+---
+
+<BaseLayout
+  title="Stores"
+  description="Gold Coast, Brisbane, and Australian online stores that stock Pokémon TCG products."
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="font-display font-black text-white text-3xl sm:text-4xl mb-2">
+        Stores
+      </h1>
+      <p class="text-gray-400 text-base max-w-2xl">
+        Gold Coast, Brisbane, and Australian online retailers that commonly stock Pokémon TCG
+        products. Add or edit stores in <code class="text-xs bg-white/[0.06] px-1.5 py-0.5 rounded font-mono">src/data/stores.config.ts</code>.
+      </p>
+    </div>
+
+    <!-- Region sections -->
+    {byRegion.map(({ region, stores: regionStores }) => (
+      <section class="mb-12">
+        <div class="flex items-center gap-3 mb-5">
+          <h2 class="font-display font-bold text-white text-xl">{region}</h2>
+          <span class="text-xs text-gray-600 bg-white/[0.04] border border-white/[0.06] px-2 py-0.5 rounded-full">
+            {regionStores.length} {regionStores.length === 1 ? "store" : "stores"}
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {regionStores.map((store) => (
+            <StoreCard store={store} />
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <!-- Add store CTA -->
+    <div class="card p-6 border-dashed">
+      <h3 class="font-display font-bold text-white text-base mb-1">Know a store we're missing?</h3>
+      <p class="text-gray-500 text-sm mb-3">
+        Edit <code class="text-xs bg-white/[0.06] px-1.5 py-0.5 rounded font-mono">src/data/stores.config.ts</code>
+        and open a pull request. See the README for instructions.
+      </p>
+    </div>
+
+  </div>
+</BaseLayout>

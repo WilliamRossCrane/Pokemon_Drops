@@ -1,0 +1,89 @@
+---
+import type { PokemonRelease } from "../types/release";
+import ConfidenceBadge from "./ConfidenceBadge.astro";
+import StatusBadge from "./StatusBadge.astro";
+
+interface Props {
+  release: PokemonRelease;
+}
+
+const { release } = Astro.props;
+
+const releaseDate = release.releaseDate
+  ? new Date(release.releaseDate).toLocaleDateString("en-AU", {
+      timeZone: "Australia/Brisbane",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    })
+  : null;
+
+const isUpcoming =
+  release.releaseDate && new Date(release.releaseDate) > new Date();
+---
+
+<a
+  href={`/releases/${release.id}`}
+  class="card block hover:border-white/[0.12] hover:bg-surface-elevated transition-all duration-200 group"
+>
+  <div class="p-5">
+    <!-- Top row: type chip + badges -->
+    <div class="flex items-start justify-between gap-2 mb-3">
+      <span class="text-xs font-medium text-gray-500 bg-white/[0.05] px-2 py-0.5 rounded-full">
+        {release.productType}
+      </span>
+      <div class="flex items-center gap-1.5 flex-wrap justify-end">
+        <StatusBadge status={release.availabilityStatus} />
+        <ConfidenceBadge confidence={release.confidence} />
+      </div>
+    </div>
+
+    <!-- Product name -->
+    <h3 class="font-display font-bold text-white text-base leading-snug group-hover:text-pokeblue-300 transition-colors">
+      {release.name}
+    </h3>
+    {release.setName && (
+      <p class="text-gray-500 text-xs mt-0.5">{release.setName}</p>
+    )}
+
+    <!-- Date -->
+    <div class="mt-3 flex items-center gap-4 text-sm">
+      {releaseDate ? (
+        <div class="flex items-center gap-1.5">
+          <span class="text-gray-600 text-xs" aria-hidden="true">📅</span>
+          <span class={isUpcoming ? "text-pokeyellow-400 font-medium" : "text-gray-400"}>
+            {isUpcoming ? "Releases " : "Released "}{releaseDate}
+          </span>
+        </div>
+      ) : (
+        <span class="text-gray-600 text-xs">Date TBC</span>
+      )}
+    </div>
+
+    <!-- Retailers -->
+    {release.retailersToCheck.length > 0 && (
+      <div class="mt-3 flex flex-wrap gap-1">
+        {release.retailersToCheck.slice(0, 3).map((r) => (
+          <span class="text-xs bg-white/[0.04] text-gray-500 px-2 py-0.5 rounded-full border border-white/[0.06]">
+            {r}
+          </span>
+        ))}
+        {release.retailersToCheck.length > 3 && (
+          <span class="text-xs text-gray-600 px-2 py-0.5">
+            +{release.retailersToCheck.length - 3} more
+          </span>
+        )}
+      </div>
+    )}
+  </div>
+
+  <!-- Card footer -->
+  <div class="border-t border-white/[0.05] px-5 py-2.5 flex items-center justify-between">
+    <span class="text-xs text-gray-600">
+      {release.region}
+    </span>
+    <span class="text-xs text-pokeblue-400 opacity-0 group-hover:opacity-100 transition-opacity">
+      View details →
+    </span>
+  </div>
+</a>

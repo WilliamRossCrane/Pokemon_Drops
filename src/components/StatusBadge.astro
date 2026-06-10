@@ -1,0 +1,13 @@
+---
+import type { AvailabilityStatus } from "../types/release";
+import { STATUS_COLORS, STATUS_LABELS } from "../types/release";
+
+interface Props {
+  status: AvailabilityStatus;
+}
+const { status } = Astro.props;
+---
+
+<span class={`badge ${STATUS_COLORS[status]}`}>
+  {STATUS_LABELS[status]}
+</span>

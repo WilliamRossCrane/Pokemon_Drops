@@ -1,0 +1,227 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ConfidenceBadge from "../../components/ConfidenceBadge.astro";
+import StatusBadge from "../../components/StatusBadge.astro";
+import Countdown from "../../components/Countdown.astro";
+import type { PokemonRelease } from "../../types/release";
+import releasesData from "../../data/releases.generated.json";
+
+// Astro static path generation — one page per release
+export async function getStaticPaths() {
+  const releases: PokemonRelease[] = releasesData.releases as PokemonRelease[];
+  return releases.map((r) => ({
+    params: { id: r.id },
+    props: { release: r },
+  }));
+}
+
+interface Props {
+  release: PokemonRelease;
+}
+
+const { release } = Astro.props;
+
+const isUpcoming = release.releaseDate
+  ? new Date(release.releaseDate) > new Date()
+  : false;
+
+function formatDate(dateStr?: string) {
+  if (!dateStr) return "TBC";
+  return new Date(dateStr).toLocaleDateString("en-AU", {
+    timeZone: "Australia/Brisbane",
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function formatChecked(dateStr: string) {
+  return new Date(dateStr).toLocaleString("en-AU", {
+    timeZone: "Australia/Brisbane",
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+}
+---
+
+<BaseLayout
+  title={release.name}
+  description={`${release.productType} — ${release.setName ?? "Pokémon TCG"} — releasing in Australia ${release.releaseDate ? `on ${formatDate(release.releaseDate)}` : "soon"}.`}
+>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <!-- Breadcrumb -->
+    <nav class="mb-6 flex items-center gap-2 text-xs text-gray-600">
+      <a href="/" class="hover:text-gray-400 transition-colors">Home</a>
+      <span>/</span>
+      <a href="/releases" class="hover:text-gray-400 transition-colors">Releases</a>
+      <span>/</span>
+      <span class="text-gray-400 truncate">{release.name}</span>
+    </nav>
+
+    <!-- Header card -->
+    <div class="card-elevated p-6 sm:p-8 mb-6">
+      <div class="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-6 items-start">
+        <div>
+          <!-- Badges row -->
+          <div class="flex items-center gap-2 flex-wrap mb-3">
+            <StatusBadge status={release.availabilityStatus} />
+            <ConfidenceBadge confidence={release.confidence} />
+          </div>
+
+          <!-- Name -->
+          <h1 class="font-display font-black text-white text-2xl sm:text-3xl leading-tight mb-1">
+            {release.name}
+          </h1>
+          {release.setName && (
+            <p class="text-gray-400 text-sm">{release.setName}</p>
+          )}
+
+          <!-- Meta row -->
+          <div class="flex flex-wrap gap-4 mt-4 text-sm">
+            <div>
+              <span class="text-gray-600 text-xs block">Product type</span>
+              <span class="text-gray-300">{release.productType}</span>
+            </div>
+            <div>
+              <span class="text-gray-600 text-xs block">Region</span>
+              <span class="text-gray-300">{release.region}</span>
+            </div>
+            <div>
+              <span class="text-gray-600 text-xs block">Release date</span>
+              <span class={`font-medium ${isUpcoming ? "text-pokeyellow-400" : "text-gray-300"}`}>
+                {formatDate(release.releaseDate)}
+              </span>
+            </div>
+            {release.preorderDate && (
+              <div>
+                <span class="text-gray-600 text-xs block">Preorder date</span>
+                <span class="text-gray-300">{formatDate(release.preorderDate)}</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <!-- Image if available -->
+        {release.imageUrl && (
+          <img
+            src={release.imageUrl}
+            alt={release.name}
+            loading="lazy"
+            class="w-28 sm:w-36 rounded-lg object-contain bg-surface p-2 border border-white/[0.06]"
+          />
+        )}
+      </div>
+
+      <!-- Countdown (upcoming only) -->
+      {isUpcoming && release.releaseDate && (
+        <div class="mt-6 pt-6 border-t border-white/[0.06]">
+          <Countdown targetDate={release.releaseDate} label="Releases in" />
+        </div>
+      )}
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+
+      <!-- Retailers -->
+      <div class="card p-5">
+        <h2 class="font-display font-bold text-white text-sm uppercase tracking-wider mb-3">
+          Retailers to check
+        </h2>
+        {release.retailersToCheck.length > 0 ? (
+          <ul class="space-y-2">
+            {release.retailersToCheck.map((r) => (
+              <li class="flex items-center gap-2 text-sm text-gray-300">
+                <span class="w-1.5 h-1.5 rounded-full bg-pokeblue-400 flex-shrink-0" aria-hidden="true"></span>
+                {r}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="text-gray-600 text-sm">No specific retailers tracked yet.</p>
+        )}
+
+        <p class="text-gray-600 text-xs mt-4 leading-relaxed">
+          Stock is never guaranteed. Check with each retailer directly.
+        </p>
+      </div>
+
+      <!-- Sources -->
+      <div class="card p-5">
+        <h2 class="font-display font-bold text-white text-sm uppercase tracking-wider mb-3">
+          Source links
+        </h2>
+        {release.sourceUrls.length > 0 ? (
+          <ul class="space-y-2">
+            {release.sourceUrls.map((url) => {
+              const domain = new URL(url).hostname.replace("www.", "");
+              return (
+                <li>
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex items-center gap-2 text-sm text-pokeblue-400 hover:text-pokeblue-300 transition-colors"
+                  >
+                    <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                    </svg>
+                    {domain}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <p class="text-gray-600 text-sm">No sources tracked yet for this product.</p>
+        )}
+      </div>
+    </div>
+
+    <!-- Notes -->
+    {release.notes && (
+      <div class="card p-5 mb-6">
+        <h2 class="font-display font-bold text-white text-sm uppercase tracking-wider mb-2">
+          Notes
+        </h2>
+        <p class="text-gray-400 text-sm leading-relaxed">{release.notes}</p>
+      </div>
+    )}
+
+    <!-- Confidence explanation -->
+    <div class="card p-5 mb-6">
+      <h2 class="font-display font-bold text-white text-sm uppercase tracking-wider mb-3">
+        Confidence level: <span class="capitalize normal-case">{release.confidence}</span>
+      </h2>
+      <p class="text-gray-500 text-xs leading-relaxed">
+        {release.confidence === "high" &&
+          "Product and date confirmed by an official Pokémon source or clear retailer listing."}
+        {release.confidence === "medium" &&
+          "Product is likely real but Australian availability is inferred from retailer listings or general release patterns."}
+        {release.confidence === "low" &&
+          "Product is rumoured, incomplete, missing dates, or not yet confirmed for Australia."}
+      </p>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="bg-yellow-500/5 border border-yellow-500/20 rounded-xl p-5 mb-6">
+      <p class="text-yellow-600 text-xs leading-relaxed">
+        <strong class="text-yellow-500">Disclaimer:</strong> This tracker uses publicly available
+        information. Stock availability is never guaranteed. Release dates and preorder windows
+        can change without notice. Always verify with the retailer directly before travelling
+        or making purchasing decisions. Source links are shown so you can check for yourself.
+      </p>
+    </div>
+
+    <!-- Meta footer -->
+    <p class="text-gray-700 text-xs">
+      Last checked: {formatChecked(release.lastChecked)} AEST
+    </p>
+
+    <a href="/releases" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-300 transition-colors mt-4">
+      ← Back to all releases
+    </a>
+  </div>
+</BaseLayout>

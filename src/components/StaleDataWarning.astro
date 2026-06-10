@@ -1,0 +1,37 @@
+---
+interface Props {
+  generatedAt: string;
+  staleAfterHours?: number;
+}
+
+const { generatedAt, staleAfterHours = 48 } = Astro.props;
+
+const generated = new Date(generatedAt);
+const now = new Date();
+const hoursOld = (now.getTime() - generated.getTime()) / (1000 * 60 * 60);
+const isStale = hoursOld > staleAfterHours;
+
+const formatted = generated.toLocaleString("en-AU", {
+  timeZone: "Australia/Brisbane",
+  dateStyle: "medium",
+  timeStyle: "short",
+});
+---
+
+{isStale && (
+  <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-xl px-4 py-3 flex items-start gap-3 text-sm">
+    <span class="text-yellow-400 text-base leading-none mt-0.5" aria-hidden="true">⚠</span>
+    <div>
+      <p class="text-yellow-300 font-medium">Data may be outdated</p>
+      <p class="text-yellow-400/80 text-xs mt-0.5">
+        Last updated {formatted} AEST — more than {staleAfterHours} hours ago. Check source links for the latest info.
+      </p>
+    </div>
+  </div>
+)}
+
+{!isStale && (
+  <p class="text-gray-600 text-xs">
+    Data last updated: <time datetime={generatedAt}>{formatted} AEST</time>
+  </p>
+)}

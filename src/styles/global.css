@@ -1,0 +1,105 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    @apply bg-surface text-gray-100 font-body antialiased;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply min-h-screen flex flex-col;
+  }
+
+  h1, h2, h3 {
+    @apply font-display;
+  }
+
+  /* Focus ring for keyboard nav */
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-pokeblue-400;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-surface;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-surface-elevated rounded-full;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-surface-card border border-white/[0.06] rounded-xl overflow-hidden;
+  }
+
+  .card-elevated {
+    @apply bg-surface-elevated border border-white/[0.08] rounded-xl overflow-hidden;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg
+           bg-pokeblue-600 hover:bg-pokeblue-500 text-white
+           font-medium text-sm transition-colors duration-150
+           focus-visible:outline focus-visible:outline-2 focus-visible:outline-pokeblue-400;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg
+           bg-white/[0.06] hover:bg-white/[0.1] text-gray-300
+           font-medium text-sm transition-colors duration-150;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full
+           text-xs font-semibold border;
+  }
+
+  .filter-chip {
+    @apply px-3 py-1.5 rounded-full text-sm font-medium border transition-all duration-150 cursor-pointer;
+  }
+
+  .filter-chip-active {
+    @apply bg-pokeblue-600 border-pokeblue-500 text-white;
+  }
+
+  .filter-chip-inactive {
+    @apply bg-surface-card border-white/10 text-gray-400 hover:border-white/20 hover:text-gray-300;
+  }
+
+  /* Pokéball inspired divider */
+  .pokeball-divider {
+    @apply relative flex items-center gap-4 my-8;
+  }
+  .pokeball-divider::before,
+  .pokeball-divider::after {
+    content: "";
+    @apply flex-1 h-px bg-white/10;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-pokeblue-400 to-pokered-400 bg-clip-text text-transparent;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
