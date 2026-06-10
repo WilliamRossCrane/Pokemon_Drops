@@ -1,13 +1,23 @@
 ---
 import type { AvailabilityStatus } from "../types/release";
-import { STATUS_COLORS, STATUS_LABELS } from "../types/release";
+import { STATUS_LABELS } from "../types/release";
 
 interface Props {
   status: AvailabilityStatus;
 }
 const { status } = Astro.props;
+
+const colorMap: Record<AvailabilityStatus, string> = {
+  announced: "status-announced",
+  preorder_expected: "status-preorder-expected",
+  preorder_live: "status-preorder-live",
+  released: "status-released",
+  restock_possible: "status-restock-possible",
+  sold_out: "bg-gray-500/20 text-gray-300 border-gray-500/30",
+  unknown: "bg-gray-500/20 text-gray-300 border-gray-500/30",
+};
 ---
 
-<span class={`badge ${STATUS_COLORS[status]}`}>
+<span class={`badge ${colorMap[status]}`}>
   {STATUS_LABELS[status]}
 </span>

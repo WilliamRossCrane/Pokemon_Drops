@@ -53,68 +53,77 @@ const watchlist = [...allReleases]
   title="All Releases"
   description="All tracked Pokémon TCG releases and preorders for Australia — ETBs, booster boxes, tins, and more."
 >
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
 
     <!-- Page header -->
-    <div class="mb-8">
-      <h1 class="font-display font-black text-white text-3xl sm:text-4xl mb-2">
+    <div class="mb-10">
+      <h1 class="font-display font-black text-white text-4xl sm:text-5xl mb-3">
         All Releases
       </h1>
       <p class="text-gray-400 text-base max-w-2xl">
-        Every tracked Pokémon TCG product — upcoming, preorder, released, and possible restocks.
-        Filtered and sorted below. Sources always linked.
+        Browse all Pokémon TCG drops, preorders, restocks, and past releases for Australia. 
+        Every product is sourced and verified with links to retailers.
       </p>
     </div>
 
-    <div class="mb-6">
+    <div class="mb-8">
       <StaleDataWarning generatedAt={generatedAt} />
     </div>
 
     <!-- Controls row -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-      <div class="flex items-center gap-2 flex-wrap">
-        <span class="text-xs text-gray-600 font-medium">Type:</span>
-        <button class="filter-chip filter-chip-active" data-product-filter="all">All</button>
-        {PRODUCT_TYPES.map((type) => (
-          <button class="filter-chip filter-chip-inactive" data-product-filter={type}>
-            {type}
-          </button>
-        ))}
+    <div class="flex flex-col gap-6 mb-10">
+      <!-- Product type filters -->
+      <div>
+        <p class="text-xs text-gray-500 uppercase font-bold mb-3 tracking-wide">Product type</p>
+        <div class="flex items-center gap-2 flex-wrap">
+          <button class="filter-chip filter-chip-active" data-product-filter="all">All</button>
+          {PRODUCT_TYPES.map((type) => (
+            <button class="filter-chip filter-chip-inactive" data-product-filter={type}>
+              {type}
+            </button>
+          ))}
+        </div>
       </div>
-      <button id="toggle-past" class="status-tab px-3 py-1.5 rounded-full text-sm font-medium border bg-surface-card border-white/10 text-gray-400 hover:border-white/20" type="button">
-        Show past releases
-      </button>
-    </div>
 
-    <!-- Status tabs -->
-    <div class="flex gap-2 flex-wrap mb-8 border-b border-white/[0.06] pb-4">
-      {[
-        { label: "Upcoming", value: "upcoming" },
-        { label: "Preorder Live", value: "preorder_live" },
-        { label: "Restock Possible", value: "restock_possible" },
-        { label: "Released", value: "released" },
-        { label: "All", value: "all" },
-      ].map((tab, i) => (
-        <button
-          class={`status-tab px-3 py-1.5 rounded-full text-sm font-medium border transition-all duration-150 ${
-            i === 0
-              ? "bg-pokeblue-600 border-pokeblue-500 text-white"
-              : "bg-surface-card border-white/10 text-gray-400 hover:border-white/20"
-          }`}
-          data-status-tab={tab.value}
-        >
-          {tab.label}
+      <!-- Status/View toggles -->
+      <div class="flex items-center gap-3 flex-wrap justify-between sm:justify-start">
+        <div>
+          <p class="text-xs text-gray-500 uppercase font-bold mb-3 tracking-wide">View</p>
+          <div class="flex gap-2 flex-wrap">
+            {[
+              { label: "Upcoming", value: "upcoming" },
+              { label: "Preorder Live", value: "preorder_live" },
+              { label: "Restock Possible", value: "restock_possible" },
+              { label: "Released", value: "released" },
+              { label: "All", value: "all" },
+            ].map((tab, i) => (
+              <button
+                class={`status-tab px-4 py-2 rounded-full text-sm font-medium border transition-all duration-150 ${
+                  i === 0
+                    ? "bg-gradient-to-r from-pokeblue-500/50 to-pokeblue-600/50 border-pokeblue-400/40 text-white"
+                    : "bg-white/[0.06] border-white/15 text-gray-400 hover:text-white hover:bg-white/[0.1] hover:border-white/25"
+                }`}
+                data-status-tab={tab.value}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <button id="toggle-past" class="px-4 py-2 rounded-full text-sm font-medium border border-white/15 bg-white/[0.06] text-gray-400 hover:text-white hover:bg-white/[0.1] hover:border-white/25 transition-all duration-150" type="button">
+          Show past releases
         </button>
-      ))}
+      </div>
     </div>
 
     <!-- Upcoming drops -->
-    <section class="mb-10">
-      <div class="mb-4">
-        <h2 class="font-display font-bold text-white text-xl">Upcoming Drops</h2>
-        <p class="text-gray-400 text-sm">Future releases with confirmed dates sorted by soonest arrival.</p>
+    <section class="mb-16">
+      <div class="mb-6">
+        <h2 class="font-display font-bold text-white text-2xl">Upcoming Drops</h2>
+        <p class="text-gray-400 text-sm mt-1">Future releases with confirmed dates sorted by arrival.</p>
       </div>
-      <div id="releases-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div id="releases-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {upcoming.map((release) => (
           <div
             class="release-card-wrapper"
@@ -129,12 +138,12 @@ const watchlist = [...allReleases]
     </section>
 
     {upcomingWatchlist.length > 0 && (
-      <section class="mb-10">
-        <div class="mb-4">
-          <h2 class="font-display font-bold text-white text-xl">Upcoming Watchlist</h2>
-          <p class="text-gray-400 text-sm">Announced and expected items without a confirmed date.</p>
+      <section class="mb-16">
+        <div class="mb-6">
+          <h2 class="font-display font-bold text-white text-2xl">Upcoming Watchlist</h2>
+          <p class="text-gray-400 text-sm mt-1">Announced items and expected drops without confirmed dates.</p>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {upcomingWatchlist.map((release) => (
             <div
               class="release-card-wrapper"
@@ -150,12 +159,12 @@ const watchlist = [...allReleases]
     )}
 
     {watchlist.length > 0 && (
-      <section class="mb-10">
-        <div class="mb-4">
-          <h2 class="font-display font-bold text-white text-xl">Restock / Rerelease Watchlist</h2>
-          <p class="text-gray-400 text-sm">Products without a confirmed future date, worth checking as release windows approach.</p>
+      <section class="mb-16">
+        <div class="mb-6">
+          <h2 class="font-display font-bold text-white text-2xl">Restock & Rerelease Watchlist</h2>
+          <p class="text-gray-400 text-sm mt-1">Products worth monitoring as release windows approach.</p>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {watchlist.map((release) => (
             <div
               class="release-card-wrapper"
@@ -209,7 +218,7 @@ const watchlist = [...allReleases]
     const dateStr = card.dataset.releaseDate;
     const status = card.dataset.status;
     if (status === "released") return false;
-    if (!dateStr) return true; // no date = treat as upcoming/unknown
+    if (!dateStr) return true;
     return new Date(dateStr) >= todayDate;
   }
 
@@ -255,11 +264,13 @@ const watchlist = [...allReleases]
   statusTabs.forEach((tab) => {
     tab.addEventListener("click", () => {
       statusTabs.forEach((t) => {
-        t.classList.toggle("bg-pokeblue-600", t === tab);
-        t.classList.toggle("border-pokeblue-500", t === tab);
+        t.classList.toggle("bg-gradient-to-r", t === tab);
+        t.classList.toggle("from-pokeblue-500/50", t === tab);
+        t.classList.toggle("to-pokeblue-600/50", t === tab);
+        t.classList.toggle("border-pokeblue-400/40", t === tab);
         t.classList.toggle("text-white", t === tab);
-        t.classList.toggle("bg-surface-card", t !== tab);
-        t.classList.toggle("border-white/10", t !== tab);
+        t.classList.toggle("bg-white/[0.06]", t !== tab);
+        t.classList.toggle("border-white/15", t !== tab);
         t.classList.toggle("text-gray-400", t !== tab);
       });
       activeStatus = tab.dataset.statusTab!;
@@ -273,6 +284,5 @@ const watchlist = [...allReleases]
     applyFilters();
   });
 
-  // Initial render — show upcoming by default
   applyFilters();
 </script>

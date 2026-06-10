@@ -6,10 +6,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   title="About & Data"
   description="About the Gold Coast Pokémon TCG Drop Tracker — how it works, data sources, and ethical scraping notes."
 >
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
 
-    <div class="mb-10">
-      <h1 class="font-display font-black text-white text-3xl sm:text-4xl mb-2">
+    <div class="mb-12">
+      <h1 class="font-display font-black text-white text-4xl sm:text-5xl mb-3">
         About & Data
       </h1>
       <p class="text-gray-400 text-base">
@@ -18,117 +18,111 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </div>
 
     <!-- What is this -->
-    <section class="card p-6 mb-6">
-      <h2 class="font-display font-bold text-white text-lg mb-3">What is this?</h2>
-      <div class="prose-sm text-gray-400 space-y-3 leading-relaxed">
+    <section class="pocket-card p-6 mb-8">
+      <h2 class="font-display font-bold text-white text-xl mb-4">What is this?</h2>
+      <div class="space-y-3 leading-relaxed text-gray-400">
         <p>
-          This is a <strong class="text-gray-200">fan-made, community tracker</strong> for Pokémon TCG
+          This is a <strong class="text-white">fan-made, community tracker</strong> for Pokémon TCG
           collectors based on the Gold Coast, Queensland, Australia.
         </p>
         <p>
-          It answers one question: <em class="text-gray-300">"What Pokémon TCG products are dropping soon,
-          when are they releasing in Australia, and which local or online stores might stock them?"</em>
+          It answers one question: <em class="text-gray-300">"What Pokémon TCG products are dropping soon, when are they releasing in Australia, and where can I buy them?"</em>
         </p>
-        <p>
-          This site is not affiliated with, endorsed by, or connected to Nintendo, Creatures Inc.,
-          GAME FREAK, or The Pokémon Company.
+        <p class="text-sm text-gray-500">
+          This site is not affiliated with, endorsed by, or connected to Nintendo, Creatures Inc., GAME FREAK, or The Pokémon Company.
         </p>
       </div>
     </section>
 
     <!-- How data is collected -->
-    <section class="card p-6 mb-6">
-      <h2 class="font-display font-bold text-white text-lg mb-3">How data is collected</h2>
-      <div class="text-gray-400 text-sm space-y-3 leading-relaxed">
+    <section class="pocket-card p-6 mb-8">
+      <h2 class="font-display font-bold text-white text-xl mb-4">How data is collected</h2>
+      <div class="space-y-3 leading-relaxed text-gray-400">
         <p>
-          Data is collected by a scheduled script that runs once per day via <strong class="text-gray-200">GitHub Actions</strong>.
-          The script checks public product and release pages where access is allowed, then writes
-          the normalised data to a static JSON file.
+          Data is collected by a scheduled script that runs daily via <strong class="text-white">GitHub Actions</strong>.
+          The script checks public product and release pages where access is allowed.
         </p>
         <p>
-          The website is a <strong class="text-gray-200">static site</strong> — it reads the generated JSON
-          at build time and has no live backend or database.
+          The website is a <strong class="text-white">static site</strong> — it reads generated JSON at build time with no live backend or database.
         </p>
-        <p>
-          <strong class="text-gray-200">Source links are shown on every product</strong> so you can
-          verify the information yourself.
+        <p class="text-sm">
+          <strong class="text-white">Source links are shown on every product</strong> so you can verify information yourself.
         </p>
       </div>
     </section>
 
     <!-- Confidence levels -->
-    <section class="card p-6 mb-6">
-      <h2 class="font-display font-bold text-white text-lg mb-4">Confidence levels</h2>
-      <div class="space-y-4">
+    <section class="pocket-card p-6 mb-8">
+      <h2 class="font-display font-bold text-white text-xl mb-4">Confidence levels</h2>
+      <div class="space-y-3">
         {[
           {
             level: "High",
             color: "bg-green-500/20 text-green-300 border-green-500/30",
-            desc: "Product and date are confirmed by an official Pokémon source or a clear retailer listing with a confirmed AU release date.",
+            desc: "Official Pokémon source or confirmed AU retailer listing with definite release date.",
           },
           {
             level: "Medium",
             color: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30",
-            desc: "Product is likely real but Australian availability or date is inferred from retailer listings, general release cadence, or early-stage listings.",
+            desc: "Likely real but Australian availability or date inferred from retailers, release cadence, or early listings.",
           },
           {
             level: "Low",
             color: "bg-red-500/20 text-red-300 border-red-500/30",
-            desc: "Product is rumoured, missing a confirmed date, not yet confirmed for Australia, or based on unreliable secondary sources.",
+            desc: "Rumoured, missing confirmed date, not yet confirmed for Australia, or based on unreliable sources.",
           },
         ].map(({ level, color, desc }) => (
-          <div class="flex items-start gap-3">
-            <span class={`badge flex-shrink-0 ${color}`}>{level}</span>
-            <p class="text-gray-500 text-sm leading-relaxed">{desc}</p>
+          <div class="flex gap-3 p-3 bg-white/[0.02] rounded-lg border border-white/[0.08]">
+            <span class={`inline-block px-2.5 py-1 rounded text-xs font-bold whitespace-nowrap border ${color}`}>{level}</span>
+            <p class="text-gray-400 text-sm leading-relaxed">{desc}</p>
           </div>
         ))}
       </div>
     </section>
 
     <!-- What we don't do -->
-    <section class="card p-6 mb-6">
-      <h2 class="font-display font-bold text-white text-lg mb-3">Ethical data collection</h2>
+    <section class="pocket-card p-6 mb-8">
+      <h2 class="font-display font-bold text-white text-xl mb-4">Ethical data collection</h2>
       <p class="text-gray-400 text-sm mb-4 leading-relaxed">
-        This project is committed to responsible, transparent data collection. We do not:
+        This project is committed to responsible, transparent data collection. We don't:
       </p>
       <ul class="space-y-2">
         {[
           "Bypass CAPTCHAs or bot-protection systems",
-          "Use private APIs or require logins to scrape data",
-          "Scrape aggressively — delays are added between requests",
+          "Use private APIs or require credentials to scrape",
+          "Scrape aggressively — we add delays between requests",
           "Make up availability or stock information",
-          "Claim a store will definitely have stock without a confirmed source",
-          "Access any non-public data",
+          "Claim guaranteed stock without a confirmed source",
+          "Access non-public data or breach access controls",
         ].map((item) => (
-          <li class="flex items-start gap-2 text-sm text-gray-400">
-            <span class="text-pokered-400 mt-0.5 flex-shrink-0" aria-hidden="true">✕</span>
+          <li class="flex items-start gap-3 text-sm text-gray-400">
+            <span class="text-pokered-400 font-bold mt-0.5 flex-shrink-0">✕</span>
             {item}
           </li>
         ))}
       </ul>
 
-      <div class="mt-4 pt-4 border-t border-white/[0.06]">
-        <p class="text-gray-400 text-sm leading-relaxed">
-          If a source does not confirm stock, we say <em class="text-gray-300">"check retailer"</em>.
-          If a retailer blocks automated access, we skip it and document the limitation.
+      <div class="mt-4 pt-4 border-t border-white/[0.08]">
+        <p class="text-gray-500 text-sm leading-relaxed">
+          If a source doesn't confirm stock, we say <em class="text-gray-400">"check retailer"</em>. If a retailer blocks automated access, we skip it and document the limitation.
         </p>
       </div>
     </section>
 
     <!-- Limitations -->
-    <section class="card p-6 mb-6">
-      <h2 class="font-display font-bold text-white text-lg mb-3">Known limitations</h2>
+    <section class="pocket-card p-6 mb-8">
+      <h2 class="font-display font-bold text-white text-xl mb-4">Known limitations</h2>
       <ul class="space-y-2">
         {[
           "Release dates can change — The Pokémon Company adjusts schedules without notice.",
-          "Australian dates sometimes differ from global/US release windows.",
+          "Australian dates often differ from US/global release windows.",
           "Retailer stock is never guaranteed, even on launch day.",
-          "Some major retailers block automated data collection — their data may be entered manually.",
-          "Preorder windows vary widely between local game stores and major retailers.",
-          "This tracker focuses on physical products, not digital TCG.",
+          "Some retailers block automated collection — their data may be manual.",
+          "Preorder windows vary between local and major retailers.",
+          "This tracker focuses on physical products, not Pokémon TCG Live.",
         ].map((item) => (
-          <li class="flex items-start gap-2 text-sm text-gray-500 leading-relaxed">
-            <span class="text-gray-700 mt-0.5 flex-shrink-0" aria-hidden="true">—</span>
+          <li class="flex items-start gap-3 text-sm text-gray-400 leading-relaxed">
+            <span class="text-gray-600 mt-0.5 flex-shrink-0">—</span>
             {item}
           </li>
         ))}
@@ -136,33 +130,33 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </section>
 
     <!-- Tech stack -->
-    <section class="card p-6 mb-6">
-      <h2 class="font-display font-bold text-white text-lg mb-3">Tech stack</h2>
+    <section class="pocket-card p-6 mb-8">
+      <h2 class="font-display font-bold text-white text-xl mb-4">Tech stack</h2>
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {[
           ["Astro", "Static site framework"],
-          ["TypeScript", "Type-safe scripting"],
+          ["TypeScript", "Type-safe code"],
           ["Tailwind CSS", "Styling"],
-          ["GitHub Actions", "Scheduled data updates"],
-          ["Node.js", "Data update scripts"],
-          ["tsx", "TypeScript script runner"],
+          ["GitHub Actions", "Scheduled updates"],
+          ["Node.js", "Data scripts"],
+          ["tsx", "TS runner"],
         ].map(([tech, desc]) => (
-          <div class="bg-white/[0.03] border border-white/[0.06] rounded-lg p-3">
-            <div class="font-medium text-gray-300 text-xs">{tech}</div>
-            <div class="text-gray-600 text-xs mt-0.5">{desc}</div>
+          <div class="bg-white/[0.05] border border-white/[0.08] rounded-lg p-3">
+            <div class="font-medium text-gray-300 text-sm">{tech}</div>
+            <div class="text-gray-500 text-xs mt-1">{desc}</div>
           </div>
         ))}
       </div>
     </section>
 
     <!-- Contributing -->
-    <section class="card p-6">
-      <h2 class="font-display font-bold text-white text-lg mb-3">Contributing</h2>
+    <section class="pocket-card p-6">
+      <h2 class="font-display font-bold text-white text-xl mb-3">Contributing</h2>
       <p class="text-gray-400 text-sm leading-relaxed mb-3">
-        Found a missing product, wrong date, or know a local store we should add?
-        Open a pull request or issue on GitHub. See the README for how to add stores or source adapters.
+        Found a missing product, wrong date, or know a local store we should list?
+        Open a pull request or issue on GitHub. See the README for how to contribute.
       </p>
-      <p class="text-gray-600 text-xs">
+      <p class="text-gray-500 text-xs">
         Please don't submit data that requires bypassing any retailer's access controls.
       </p>
     </section>

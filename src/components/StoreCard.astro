@@ -7,51 +7,39 @@ interface Props {
 }
 
 const { store } = Astro.props;
-
-const regionColors: Record<string, string> = {
-  "Gold Coast": "text-pokeyellow-400",
-  "Brisbane": "text-pokeblue-400",
-  "Australia Online": "text-green-400",
-  "Other": "text-gray-400",
-};
 ---
 
-<div class="card p-5 flex flex-col gap-3">
+<div class="pocket-card p-6 flex flex-col">
   <!-- Header row -->
-  <div class="flex items-start justify-between gap-3">
-    <div>
-      <h3 class="font-display font-bold text-white text-base leading-snug">
-        {store.name}
-      </h3>
-      {store.suburb && (
-        <p class="text-gray-500 text-xs mt-0.5">{store.suburb}</p>
-      )}
-    </div>
-    <span class={`text-xs font-medium ${regionColors[store.region] ?? "text-gray-400"}`}>
-      {store.region}
-    </span>
+  <div class="mb-4">
+    <h3 class="font-display font-bold text-white text-lg leading-snug">
+      {store.name}
+    </h3>
+    {store.suburb && (
+      <p class="text-gray-400 text-sm mt-1">{store.suburb}</p>
+    )}
   </div>
 
   <!-- Tags -->
-  <div class="flex flex-wrap gap-1.5">
-    <span class="text-xs bg-white/[0.05] text-gray-400 px-2 py-0.5 rounded-full border border-white/[0.08]">
+  <div class="flex flex-wrap gap-2 mb-4">
+    <span class="text-xs bg-white/[0.08] text-gray-300 px-2.5 py-1 rounded-full border border-white/[0.12] font-medium">
       {STORE_TYPE_LABELS[store.type]}
     </span>
     {store.stocksPokemonTcg && (
-      <span class="text-xs bg-green-500/10 text-green-400 px-2 py-0.5 rounded-full border border-green-500/20">
-        Stocks Pokémon TCG
+      <span class="text-xs bg-green-500/15 text-green-300 px-2.5 py-1 rounded-full border border-green-500/25 font-medium">
+        ✓ Stocks TCG
       </span>
     )}
     {store.hasOnlinePreorders && (
-      <span class="text-xs bg-pokeblue-500/10 text-pokeblue-300 px-2 py-0.5 rounded-full border border-pokeblue-500/20">
-        Online preorders
+      <span class="text-xs bg-pokeblue-500/15 text-pokeblue-300 px-2.5 py-1 rounded-full border border-pokeblue-500/25 font-medium">
+        ✓ Online Orders
       </span>
     )}
   </div>
 
   <!-- Notes -->
   {store.notes && (
-    <p class="text-gray-500 text-xs leading-relaxed">{store.notes}</p>
+    <p class="text-gray-400 text-sm leading-relaxed mb-4">{store.notes}</p>
   )}
 
   <!-- Link -->
@@ -59,10 +47,10 @@ const regionColors: Record<string, string> = {
     href={store.websiteUrl}
     target="_blank"
     rel="noopener noreferrer"
-    class="inline-flex items-center gap-1.5 text-xs text-pokeblue-400 hover:text-pokeblue-300 transition-colors mt-auto"
+    class="inline-flex items-center gap-2 text-sm font-medium text-pokeblue-300 hover:text-pokeblue-200 transition-colors mt-auto"
   >
     Visit website
-    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
         d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
     </svg>

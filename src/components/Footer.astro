@@ -2,21 +2,21 @@
 const year = new Date().getFullYear();
 ---
 
-<footer class="mt-20 border-t border-white/[0.06] bg-surface">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-8">
+<footer class="mt-20 border-t border-white/[0.08] bg-gradient-to-t from-white/[0.02] to-transparent">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-10 mb-10">
 
       <div>
-        <h3 class="font-display font-bold text-white text-sm mb-3">TCGDrop GC</h3>
-        <p class="text-gray-500 text-xs leading-relaxed">
-          A fan-made tracker for Gold Coast Pokémon TCG collectors. Not affiliated
+        <h3 class="font-display font-bold text-white text-sm mb-4">TCGDrop GC</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">
+          A community-made tracker for Gold Coast Pokémon TCG collectors. Not affiliated
           with Nintendo, Creatures, or The Pokémon Company.
         </p>
       </div>
 
       <div>
-        <h3 class="font-display font-bold text-white text-sm mb-3">Pages</h3>
-        <ul class="space-y-2">
+        <h3 class="font-display font-bold text-white text-sm mb-4">Pages</h3>
+        <ul class="space-y-2.5">
           {[
             ["/", "Home"],
             ["/releases", "All Releases"],
@@ -24,7 +24,7 @@ const year = new Date().getFullYear();
             ["/about", "About & Data"],
           ].map(([href, label]) => (
             <li>
-              <a href={href} class="text-gray-500 hover:text-gray-300 text-xs transition-colors">
+              <a href={href} class="text-gray-400 hover:text-gray-200 text-sm transition-colors duration-150">
                 {label}
               </a>
             </li>
@@ -33,21 +33,21 @@ const year = new Date().getFullYear();
       </div>
 
       <div>
-        <h3 class="font-display font-bold text-white text-sm mb-3">Disclaimer</h3>
-        <p class="text-gray-500 text-xs leading-relaxed">
-          Release dates and preorder windows can change. Stock is never guaranteed.
-          Always verify with the retailer directly. Source links are shown for every release.
+        <h3 class="font-display font-bold text-white text-sm mb-4">Disclaimer</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">
+          Release dates and preorder windows change frequently. Stock is never guaranteed.
+          Always verify with retailers. Source links are provided for all releases.
         </p>
       </div>
     </div>
 
-    <div class="border-t border-white/[0.06] pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-      <p class="text-gray-600 text-xs">
-        &copy; {year} TCGDrop GC — Fan project, Gold Coast QLD, Australia.
+    <div class="border-t border-white/[0.08] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-gray-500 text-xs">
+        &copy; {year} TCGDrop GC — Community project for Gold Coast, QLD, Australia.
       </p>
-      <p class="text-gray-700 text-xs">
-        Built with <a href="https://astro.build" class="hover:text-gray-500 transition-colors">Astro</a> ·
-        Data updated by GitHub Actions
+      <p class="text-gray-600 text-xs">
+        Built with <a href="https://astro.build" class="text-gray-400 hover:text-gray-300 transition-colors">Astro</a> ·
+        Data via GitHub Actions
       </p>
     </div>
   </div>

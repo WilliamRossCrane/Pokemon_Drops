@@ -16,30 +16,30 @@ const byRegion = REGION_ORDER.map((region) => ({
   title="Stores"
   description="Gold Coast, Brisbane, and Australian online stores that stock Pokémon TCG products."
 >
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
 
     <!-- Header -->
-    <div class="mb-8">
-      <h1 class="font-display font-black text-white text-3xl sm:text-4xl mb-2">
-        Stores
+    <div class="mb-10">
+      <h1 class="font-display font-black text-white text-4xl sm:text-5xl mb-3">
+        Retailers
       </h1>
       <p class="text-gray-400 text-base max-w-2xl">
-        Gold Coast, Brisbane, and Australian online retailers that commonly stock Pokémon TCG
-        products. Add or edit stores in <code class="text-xs bg-white/[0.06] px-1.5 py-0.5 rounded font-mono">src/data/stores.config.ts</code>.
+        Find Australian stores that stock Pokémon TCG products. From local shops to online retailers, 
+        we've curated the best places to get your cards.
       </p>
     </div>
 
     <!-- Region sections -->
     {byRegion.map(({ region, stores: regionStores }) => (
-      <section class="mb-12">
-        <div class="flex items-center gap-3 mb-5">
-          <h2 class="font-display font-bold text-white text-xl">{region}</h2>
-          <span class="text-xs text-gray-600 bg-white/[0.04] border border-white/[0.06] px-2 py-0.5 rounded-full">
+      <section class="mb-14">
+        <div class="mb-6">
+          <h2 class="font-display font-bold text-white text-2xl">{region}</h2>
+          <span class="inline-block text-xs text-gray-500 mt-1">
             {regionStores.length} {regionStores.length === 1 ? "store" : "stores"}
           </span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {regionStores.map((store) => (
             <StoreCard store={store} />
           ))}
@@ -48,12 +48,13 @@ const byRegion = REGION_ORDER.map((region) => ({
     ))}
 
     <!-- Add store CTA -->
-    <div class="card p-6 border-dashed">
-      <h3 class="font-display font-bold text-white text-base mb-1">Know a store we're missing?</h3>
-      <p class="text-gray-500 text-sm mb-3">
-        Edit <code class="text-xs bg-white/[0.06] px-1.5 py-0.5 rounded font-mono">src/data/stores.config.ts</code>
-        and open a pull request. See the README for instructions.
+    <div class="pocket-card p-6">
+      <h3 class="font-display font-bold text-white text-lg mb-2">Know a store we're missing?</h3>
+      <p class="text-gray-400 text-sm mb-4">
+        Edit <code class="text-xs bg-white/[0.08] px-2 py-1 rounded font-mono text-pokeblue-300">src/data/stores.config.ts</code>
+        and open a pull request.
       </p>
+      <p class="text-xs text-gray-500">See README for contribution instructions.</p>
     </div>
 
   </div>

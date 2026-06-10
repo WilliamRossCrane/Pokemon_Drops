@@ -52,55 +52,55 @@ function formatChecked(dateStr: string) {
   title={release.name}
   description={`${release.productType} — ${release.setName ?? "Pokémon TCG"} — releasing in Australia ${release.releaseDate ? `on ${formatDate(release.releaseDate)}` : "soon"}.`}
 >
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
 
     <!-- Breadcrumb -->
-    <nav class="mb-6 flex items-center gap-2 text-xs text-gray-600">
-      <a href="/" class="hover:text-gray-400 transition-colors">Home</a>
-      <span>/</span>
-      <a href="/releases" class="hover:text-gray-400 transition-colors">Releases</a>
-      <span>/</span>
-      <span class="text-gray-400 truncate">{release.name}</span>
+    <nav class="mb-8 flex items-center gap-2 text-xs text-gray-600 hover:text-gray-500 transition-colors">
+      <a href="/" class="hover:text-gray-400">Home</a>
+      <span class="text-gray-700">/</span>
+      <a href="/releases" class="hover:text-gray-400">Releases</a>
+      <span class="text-gray-700">/</span>
+      <span class="text-gray-500 truncate max-w-xs">{release.name}</span>
     </nav>
 
-    <!-- Header card -->
-    <div class="card-elevated p-6 sm:p-8 mb-6">
+    <!-- Hero card -->
+    <div class="pocket-card p-6 sm:p-8 mb-8">
       <div class="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-6 items-start">
         <div>
           <!-- Badges row -->
-          <div class="flex items-center gap-2 flex-wrap mb-3">
+          <div class="flex items-center gap-2 flex-wrap mb-4">
             <StatusBadge status={release.availabilityStatus} />
             <ConfidenceBadge confidence={release.confidence} />
           </div>
 
           <!-- Name -->
-          <h1 class="font-display font-black text-white text-2xl sm:text-3xl leading-tight mb-1">
+          <h1 class="font-display font-black text-white text-3xl sm:text-4xl leading-tight mb-2">
             {release.name}
           </h1>
           {release.setName && (
-            <p class="text-gray-400 text-sm">{release.setName}</p>
+            <p class="text-gray-400 text-base mb-4">{release.setName}</p>
           )}
 
           <!-- Meta row -->
-          <div class="flex flex-wrap gap-4 mt-4 text-sm">
+          <div class="flex flex-wrap gap-6 text-sm">
             <div>
-              <span class="text-gray-600 text-xs block">Product type</span>
-              <span class="text-gray-300">{release.productType}</span>
+              <span class="text-gray-600 text-xs block mb-1 uppercase font-bold tracking-wide">Product type</span>
+              <span class="text-gray-200 font-medium">{release.productType}</span>
             </div>
             <div>
-              <span class="text-gray-600 text-xs block">Region</span>
-              <span class="text-gray-300">{release.region}</span>
+              <span class="text-gray-600 text-xs block mb-1 uppercase font-bold tracking-wide">Region</span>
+              <span class="text-gray-200 font-medium">{release.region}</span>
             </div>
             <div>
-              <span class="text-gray-600 text-xs block">Release date</span>
-              <span class={`font-medium ${isUpcoming ? "text-pokeyellow-400" : "text-gray-300"}`}>
+              <span class="text-gray-600 text-xs block mb-1 uppercase font-bold tracking-wide">Release date</span>
+              <span class={`font-bold ${isUpcoming ? "text-pokeyellow-400" : "text-gray-300"}`}>
                 {formatDate(release.releaseDate)}
               </span>
             </div>
             {release.preorderDate && (
               <div>
-                <span class="text-gray-600 text-xs block">Preorder date</span>
-                <span class="text-gray-300">{formatDate(release.preorderDate)}</span>
+                <span class="text-gray-600 text-xs block mb-1 uppercase font-bold tracking-wide">Preorder date</span>
+                <span class="text-gray-200 font-medium">{formatDate(release.preorderDate)}</span>
               </div>
             )}
           </div>
@@ -112,47 +112,48 @@ function formatChecked(dateStr: string) {
             src={release.imageUrl}
             alt={release.name}
             loading="lazy"
-            class="w-28 sm:w-36 rounded-lg object-contain bg-surface p-2 border border-white/[0.06]"
+            class="w-32 sm:w-40 rounded-lg object-contain bg-gradient-to-br from-pokeblue-900/30 to-surface-card p-3 border border-white/[0.1]"
           />
         )}
       </div>
 
       <!-- Countdown (upcoming only) -->
       {isUpcoming && release.releaseDate && (
-        <div class="mt-6 pt-6 border-t border-white/[0.06]">
+        <div class="mt-6 pt-6 border-t border-white/[0.1]">
           <Countdown targetDate={release.releaseDate} label="Releases in" />
         </div>
       )}
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+    <!-- Two column layout -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
 
       <!-- Retailers -->
-      <div class="card p-5">
-        <h2 class="font-display font-bold text-white text-sm uppercase tracking-wider mb-3">
+      <div class="pocket-card p-6">
+        <h2 class="font-display font-bold text-white text-lg mb-4">
           Retailers to check
         </h2>
         {release.retailersToCheck.length > 0 ? (
-          <ul class="space-y-2">
+          <ul class="space-y-2 mb-4">
             {release.retailersToCheck.map((r) => (
-              <li class="flex items-center gap-2 text-sm text-gray-300">
-                <span class="w-1.5 h-1.5 rounded-full bg-pokeblue-400 flex-shrink-0" aria-hidden="true"></span>
+              <li class="flex items-center gap-3 text-sm text-gray-300">
+                <span class="w-2 h-2 rounded-full bg-pokeblue-400 flex-shrink-0"></span>
                 {r}
               </li>
             ))}
           </ul>
         ) : (
-          <p class="text-gray-600 text-sm">No specific retailers tracked yet.</p>
+          <p class="text-gray-500 text-sm mb-4">No specific retailers tracked yet.</p>
         )}
 
-        <p class="text-gray-600 text-xs mt-4 leading-relaxed">
+        <p class="text-gray-500 text-xs leading-relaxed border-t border-white/[0.08] pt-4">
           Stock is never guaranteed. Check with each retailer directly.
         </p>
       </div>
 
       <!-- Sources -->
-      <div class="card p-5">
-        <h2 class="font-display font-bold text-white text-sm uppercase tracking-wider mb-3">
+      <div class="pocket-card p-6">
+        <h2 class="font-display font-bold text-white text-lg mb-4">
           Source links
         </h2>
         {release.sourceUrls.length > 0 ? (
@@ -165,9 +166,9 @@ function formatChecked(dateStr: string) {
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="flex items-center gap-2 text-sm text-pokeblue-400 hover:text-pokeblue-300 transition-colors"
+                    class="flex items-center gap-2.5 text-sm text-pokeblue-300 hover:text-pokeblue-200 transition-colors font-medium"
                   >
-                    <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                     </svg>
@@ -178,19 +179,20 @@ function formatChecked(dateStr: string) {
             })}
           </ul>
         ) : (
-          <p class="text-gray-600 text-sm">No sources tracked yet for this product.</p>
+          <p class="text-gray-500 text-sm">No sources tracked yet for this product.</p>
         )}
       </div>
     </div>
 
+    <!-- Prediction section -->
     {predictions.length > 0 ? (
-      <div class="card p-5 mb-6">
-        <h2 class="font-display font-bold text-white text-sm uppercase tracking-wider mb-3">
-          Where to check based on previous releases
+      <div class="pocket-card p-6 mb-8">
+        <h2 class="font-display font-bold text-white text-lg mb-2">
+          Where to check based on history
         </h2>
-        <p class="text-gray-400 text-sm mb-5">
-          These predictions are based on previous release patterns, not confirmed stock.
-          Always check the retailer directly before travelling or buying.
+        <p class="text-gray-400 text-sm mb-5 leading-relaxed">
+          These suggestions are based on previous release patterns, not confirmed stock.
+          Always verify directly with the retailer.
         </p>
         <div class="grid gap-4">
           {predictions.map((prediction) => (
@@ -199,21 +201,21 @@ function formatChecked(dateStr: string) {
         </div>
       </div>
     ) : (
-      <div class="card p-5 mb-6">
-        <h2 class="font-display font-bold text-white text-sm uppercase tracking-wider mb-2">
-          Prediction data
+      <div class="pocket-card p-6 mb-8">
+        <h2 class="font-display font-bold text-white text-lg mb-2">
+          Prediction data unavailable
         </h2>
         <p class="text-gray-400 text-sm leading-relaxed">
           No matching previous release patterns are stored for this product type yet.
-          You can add patterns in <code class="text-xs text-gray-200">src/data/previous-release-patterns.json</code>.
+          You can add patterns in <code class="text-xs bg-white/[0.08] px-2 py-1 rounded font-mono text-pokeblue-300">src/data/previous-release-patterns.json</code>.
         </p>
       </div>
     )}
 
-    <!-- Notes -->
+    <!-- Notes section -->
     {release.notes && (
-      <div class="card p-5 mb-6">
-        <h2 class="font-display font-bold text-white text-sm uppercase tracking-wider mb-2">
+      <div class="pocket-card p-6 mb-8">
+        <h2 class="font-display font-bold text-white text-lg mb-3">
           Notes
         </h2>
         <p class="text-gray-400 text-sm leading-relaxed">{release.notes}</p>
@@ -221,37 +223,37 @@ function formatChecked(dateStr: string) {
     )}
 
     <!-- Confidence explanation -->
-    <div class="card p-5 mb-6">
-      <h2 class="font-display font-bold text-white text-sm uppercase tracking-wider mb-3">
-        Confidence level: <span class="capitalize normal-case">{release.confidence}</span>
+    <div class="pocket-card p-6 mb-8">
+      <h2 class="font-display font-bold text-white text-lg mb-3">
+        Confidence level: <span class="font-display capitalize">{release.confidence}</span>
       </h2>
-      <p class="text-gray-500 text-xs leading-relaxed">
+      <p class="text-gray-400 text-sm leading-relaxed">
         {release.confidence === "high" &&
-          "Product and date confirmed by an official Pokémon source or clear retailer listing."}
+          "Product and date confirmed by an official Pokémon source or clear retailer listing with an Australian release date."}
         {release.confidence === "medium" &&
-          "Product is likely real but Australian availability is inferred from retailer listings or general release patterns."}
+          "Product is likely real but Australian availability is inferred from retailer listings or release patterns."}
         {release.confidence === "low" &&
           "Product is rumoured, incomplete, missing dates, or not yet confirmed for Australia."}
       </p>
     </div>
 
     <!-- Disclaimer -->
-    <div class="bg-yellow-500/5 border border-yellow-500/20 rounded-xl p-5 mb-6">
+    <div class="bg-gradient-to-r from-yellow-500/10 to-yellow-600/5 border border-yellow-500/20 rounded-lg p-5 mb-8">
       <p class="text-yellow-600 text-xs leading-relaxed">
-        <strong class="text-yellow-500">Disclaimer:</strong> This tracker uses publicly available
-        information. Stock availability is never guaranteed. Release dates and preorder windows
-        can change without notice. Always verify with the retailer directly before travelling
-        or making purchasing decisions. Source links are shown so you can check for yourself.
+        <strong class="text-yellow-500 block mb-1">⚠ Disclaimer</strong>
+        This tracker uses publicly available information. Stock availability is never guaranteed. Release dates and preorder windows can change without notice. Always verify with the retailer directly before travelling or making purchasing decisions.
       </p>
     </div>
 
     <!-- Meta footer -->
-    <p class="text-gray-700 text-xs">
-      Last checked: {formatChecked(release.lastChecked)} AEST
-    </p>
+    <div class="flex items-center justify-between mb-6">
+      <p class="text-gray-600 text-xs">
+        Last checked: {formatChecked(release.lastChecked)} AEST
+      </p>
+      <a href="/releases" class="inline-flex items-center gap-1.5 text-sm text-pokeblue-400 hover:text-pokeblue-300 transition-colors font-medium">
+        ← Back to releases
+      </a>
+    </div>
 
-    <a href="/releases" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-300 transition-colors mt-4">
-      ← Back to all releases
-    </a>
   </div>
 </BaseLayout>

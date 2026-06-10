@@ -69,35 +69,93 @@ const filterChips: { label: string; value: string; type: "productType" | "status
 
 <BaseLayout title="Home">
   <!-- ── Hero ─────────────────────────────────────────────────── -->
-  <section class="relative overflow-hidden border-b border-white/[0.06]">
-    <!-- Ambient background glow -->
-    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
-      <div class="absolute -top-40 -left-20 w-[500px] h-[500px] rounded-full bg-pokeblue-700/20 blur-[100px]"></div>
-      <div class="absolute -top-20 right-0 w-[400px] h-[400px] rounded-full bg-pokered-700/15 blur-[120px]"></div>
-    </div>
+  <section class="relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+        
+        <!-- Left: Hero content -->
+        <div class="max-w-lg">
+          <!-- Eyebrow -->
+          <div class="inline-flex items-center gap-2 bg-gradient-to-r from-pokeblue-500/20 to-purple-500/20 border border-pokeblue-400/30 rounded-full px-4 py-2 mb-6">
+            <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse-slow" aria-hidden="true"></span>
+            <span class="text-xs text-gray-200 font-semibold">Gold Coast, QLD</span>
+          </div>
 
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
-      <div class="max-w-2xl">
-        <!-- Eyebrow -->
-        <div class="inline-flex items-center gap-2 bg-white/[0.05] border border-white/[0.08] rounded-full px-3 py-1 mb-6">
-          <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse-slow" aria-hidden="true"></span>
-          <span class="text-xs text-gray-400 font-medium">Gold Coast, QLD, Australia</span>
+          <h1 class="font-display font-black text-5xl sm:text-6xl lg:text-7xl leading-tight mb-6">
+            Pokémon<br />
+            <span class="gradient-text">TCG Drops</span>
+          </h1>
+
+          <p class="text-gray-300 text-lg leading-relaxed mb-10">
+            Know what's releasing next on the Gold Coast. Retailers to check, expected dates, and where to find them. Always updated.
+          </p>
+
+          <div class="flex items-center gap-3 flex-wrap">
+            <a href="/releases" class="btn-primary">Explore releases</a>
+            <a href="/stores" class="btn-ghost">Store locator</a>
+          </div>
         </div>
 
-        <h1 class="font-display font-black text-4xl sm:text-5xl lg:text-6xl text-white leading-tight mb-4">
-          Pokémon TCG<br />
-          <span class="gradient-text">Drop Tracker</span>
-        </h1>
+        <!-- Right: Featured next drop card -->
+        {nextDrop && (
+          <div class="relative">
+            <div class="pocket-card h-full overflow-hidden flex flex-col">
+              <!-- Card top section with gradient -->
+              <div class="relative p-6 bg-gradient-to-br from-pokeblue-500/30 to-purple-500/10 border-b border-white/[0.1]">
+                <div class="flex items-start justify-between mb-4">
+                  <span class="text-xs font-bold text-gray-300 bg-white/[0.1] px-3 py-1 rounded-full uppercase">Next Drop</span>
+                  <StatusBadge status={nextDrop.availabilityStatus} />
+                </div>
+                <h2 class="font-display font-bold text-2xl text-white leading-tight">
+                  {nextDrop.name}
+                </h2>
+                {nextDrop.setName && (
+                  <p class="text-gray-400 text-sm mt-2 font-medium">{nextDrop.setName}</p>
+                )}
+              </div>
 
-        <p class="text-gray-400 text-lg leading-relaxed mb-8 max-w-lg">
-          What's dropping next, when it releases in Australia, and where to find
-          it on the Gold Coast. Updated automatically. Sources always shown.
-        </p>
+              <!-- Card content -->
+              <div class="p-6 flex-1 flex flex-col">
+                <div class="flex items-center gap-2 mb-6">
+                  <span class="text-2xl" aria-hidden="true">📅</span>
+                  <span class="text-lg font-bold text-pokeyellow-400">
+                    {nextDrop.releaseDate
+                      ? new Date(nextDrop.releaseDate).toLocaleDateString("en-AU", {
+                          timeZone: "Australia/Brisbane",
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })
+                      : "Date TBC"}
+                  </span>
+                </div>
 
-        <div class="flex items-center gap-3 flex-wrap">
-          <a href="/releases" class="btn-primary">View all releases →</a>
-          <a href="/stores" class="btn-ghost">Find local stores</a>
-        </div>
+                <p class="text-gray-400 text-sm mb-6">
+                  {nextDrop.productType} • {nextDrop.region}
+                </p>
+
+                <div class="mt-auto">
+                  <p class="text-xs text-gray-500 uppercase font-bold mb-3 tracking-wide">Check at:</p>
+                  <div class="flex flex-wrap gap-2">
+                    {nextDrop.retailersToCheck.slice(0, 3).map((r) => (
+                      <span class="text-xs bg-white/[0.08] text-gray-300 px-3 py-1.5 rounded-full font-medium">
+                        {r}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card footer CTA -->
+              <div class="border-t border-white/[0.08] px-6 py-4 bg-gradient-to-r from-white/[0.02] to-transparent">
+                <a href={`/releases/${nextDrop.id}`} class="text-sm font-semibold text-pokeblue-400 hover:text-pokeblue-300 transition-colors flex items-center gap-2">
+                  View details & predictions
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   </section>
@@ -105,53 +163,20 @@ const filterChips: { label: string; value: string; type: "productType" | "status
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
     <!-- ── Stale data warning ──────────────────────────────────── -->
-    <div class="mt-6">
+    <div class="mt-8 mb-10">
       <StaleDataWarning generatedAt={generatedAt} />
     </div>
 
-    <!-- ── Next drop highlight ─────────────────────────────────── -->
-    {nextDrop && (
-      <section class="mt-10">
-        <h2 class="font-display font-bold text-white text-sm uppercase tracking-widest mb-4 text-gray-500">
-          Next drop
-        </h2>
-        <div class="card-elevated p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-8 items-center">
-          <div>
-            <div class="flex items-center gap-2 mb-3 flex-wrap">
-              <StatusBadge status={nextDrop.availabilityStatus} />
-              <span class="text-xs text-gray-600">·</span>
-              <span class="text-xs text-gray-500">{nextDrop.productType}</span>
-            </div>
-            <h3 class="font-display font-black text-white text-2xl sm:text-3xl leading-tight mb-1">
-              {nextDrop.name}
-            </h3>
-            {nextDrop.setName && (
-              <p class="text-gray-500 text-sm mb-4">{nextDrop.setName}</p>
-            )}
-            <a href={`/releases/${nextDrop.id}`} class="btn-primary mt-2">
-              See retailers & details →
-            </a>
-          </div>
-
-          <div class="sm:text-right">
-            <Countdown
-              targetDate={nextDrop.releaseDate!}
-              label="Releases in"
-            />
-          </div>
-        </div>
-      </section>
-    )}
-
     <!-- ── Filter chips ───────────────────────────────────────── -->
-    <section class="mt-10">
-      <div class="flex items-center gap-2 flex-wrap" role="group" aria-label="Filter releases">
+    <section class="mb-8">
+      <p class="text-xs text-gray-500 uppercase font-bold mb-4 tracking-wide">Filter by</p>
+      <div class="flex items-center gap-2.5 flex-wrap" role="group" aria-label="Filter releases">
         <button
           class="filter-chip filter-chip-active"
           data-filter="all"
           data-type="all"
         >
-          All
+          All Types
         </button>
         {filterChips.map((chip) => (
           <button
@@ -166,17 +191,15 @@ const filterChips: { label: string; value: string; type: "productType" | "status
     </section>
 
     <!-- ── Upcoming drops ────────────────────────────────────── -->
-    <section class="mt-6">
-      <div class="mb-4 flex items-center justify-between gap-4">
-        <div>
-          <h2 class="font-display font-bold text-white text-xl">Upcoming Drops</h2>
-          <p class="text-gray-400 text-sm">Future release dates confirmed in Australia and preorder windows.</p>
-        </div>
+    <section class="mb-16">
+      <div class="mb-6">
+        <h2 class="font-display font-bold text-white text-2xl mb-2">Upcoming Drops</h2>
+        <p class="text-gray-400 text-sm">Confirmed Australian release dates and preorder windows.</p>
       </div>
 
       <div
         id="releases-grid"
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
       >
         {upcoming.map((release) => (
           <div
@@ -191,12 +214,12 @@ const filterChips: { label: string; value: string; type: "productType" | "status
     </section>
 
     {upcomingWatchlist.length > 0 && (
-      <section class="mt-12">
-        <div class="mb-4">
-          <h2 class="font-display font-bold text-white text-xl">Upcoming Watchlist</h2>
-          <p class="text-gray-400 text-sm">Announced products without a confirmed date yet, or items expected later in 2026.</p>
+      <section class="mb-16">
+        <div class="mb-6">
+          <h2 class="font-display font-bold text-white text-2xl mb-2">Upcoming Watchlist</h2>
+          <p class="text-gray-400 text-sm">Announced products waiting for confirmed dates or expected later in 2026.</p>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {upcomingWatchlist.map((release) => (
             <div
               class="release-card-wrapper"
@@ -211,12 +234,12 @@ const filterChips: { label: string; value: string; type: "productType" | "status
     )}
 
     {watchlist.length > 0 && (
-      <section class="mt-12 mb-16">
-        <div class="mb-4">
-          <h2 class="font-display font-bold text-white text-xl">Restock / Rerelease Watchlist</h2>
-          <p class="text-gray-400 text-sm">Products with no confirmed date yet, but worth checking when release windows approach.</p>
+      <section class="mb-16">
+        <div class="mb-6">
+          <h2 class="font-display font-bold text-white text-2xl mb-2">Restock & Rerelease Watchlist</h2>
+          <p class="text-gray-400 text-sm">Products worth checking as release windows approach, no confirmed date yet.</p>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {watchlist.map((release) => (
             <div
               class="release-card-wrapper"
@@ -230,17 +253,18 @@ const filterChips: { label: string; value: string; type: "productType" | "status
       </section>
     )}
 
-      <div id="empty-state" class="hidden text-center py-20">
-        <div class="text-4xl mb-3" aria-hidden="true">🔍</div>
-        <p class="text-gray-400">No releases match that filter.</p>
-        <button class="text-pokeblue-400 text-sm mt-2 hover:underline" id="clear-filter">
-          Clear filter
+      <div id="empty-state" class="hidden text-center py-16">
+        <div class="text-5xl mb-4" aria-hidden="true">🔍</div>
+        <p class="text-gray-400 text-lg mb-2">No releases match that filter.</p>
+        <button class="text-pokeblue-400 hover:text-pokeblue-300 text-sm mt-3 font-medium transition-colors" id="clear-filter">
+          Clear filters
         </button>
       </div>
 
-      <div class="mt-8 text-center">
-        <a href="/releases" class="btn-ghost">
-          View all releases including past drops →
+      <div class="mt-12 text-center pb-8">
+        <p class="text-gray-500 text-sm mb-4">Want to see more?</p>
+        <a href="/releases" class="btn-primary">
+          View all releases & past drops
         </a>
       </div>
     </div>
