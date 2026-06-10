@@ -4,6 +4,7 @@ import ConfidenceBadge from "./ConfidenceBadge.astro";
 import StatusBadge from "./StatusBadge.astro";
 import PredictionBadge from "./PredictionBadge.astro";
 import { predictRetailers } from "../utils/predictRetailers";
+import { isUpcomingWatchlist } from "../utils/releaseFilters";
 
 interface Props {
   release: PokemonRelease;
@@ -22,8 +23,32 @@ const releaseDate = release.releaseDate
     })
   : null;
 
-const isUpcoming =
-  release.releaseDate && new Date(release.releaseDate) > new Date();
+const now = new Date();
+const releaseDateObject = release.releaseDate ? new Date(`${release.releaseDate}T00:00:00`) : null;
+const isUpcoming = releaseDateObject ? releaseDateObject >= new Date(now.toISOString().slice(0, 10)) : false;
+const isFutureWatchlist = isUpcomingWatchlist(release);
+
+function getStatusLabel() {
+  if (release.releaseDate && isUpcoming) {
+    if (release.availabilityStatus === "preorder_live") return "Preorder live";
+    if (release.availabilityStatus === "preorder_expected") return "Preorder expected";
+    return `Releases ${releaseDate}`;
+  }
+
+  if (!release.releaseDate) {
+    if (release.availabilityStatus === "restock_possible") return "Restock possible";
+    if (isFutureWatchlist) return "Future watchlist";
+    return "Date TBC";
+  }
+
+  if (release.availabilityStatus === "restock_possible") {
+    return "Restock possible";
+  }
+
+  return `Released ${releaseDate}`;
+}
+
+const dateLabel = getStatusLabel();
 ---
 
 <a
@@ -52,16 +77,12 @@ const isUpcoming =
 
     <!-- Date -->
     <div class="mt-3 flex items-center gap-4 text-sm">
-      {releaseDate ? (
-        <div class="flex items-center gap-1.5">
-          <span class="text-gray-600 text-xs" aria-hidden="true">📅</span>
-          <span class={isUpcoming ? "text-pokeyellow-400 font-medium" : "text-gray-400"}>
-            {isUpcoming ? "Releases " : "Released "}{releaseDate}
-          </span>
-        </div>
-      ) : (
-        <span class="text-gray-600 text-xs">Date TBC</span>
-      )}
+      <div class="flex items-center gap-1.5">
+        <span class="text-gray-600 text-xs" aria-hidden="true">📅</span>
+        <span class={isUpcoming ? "text-pokeyellow-400 font-medium" : "text-gray-400"}>
+          {dateLabel}
+        </span>
+      </div>
     </div>
 
     {topPredictions.length > 0 && (

@@ -1,0 +1,43 @@
+[
+  {
+    "id": "future-mega-evolution-etb",
+    "name": "Mega Evolution Elite Trainer Box",
+    "setName": "Mega Evolution",
+    "productType": "Elite Trainer Box",
+    "releaseDate": "2026-09-26",
+    "region": "Australia",
+    "availabilityStatus": "announced",
+    "sourceUrls": [],
+    "retailersToCheck": ["Big W", "JB Hi-Fi", "EB Games / Zing", "Good Games Gold Coast"],
+    "confidence": "medium",
+    "notes": "Future watchlist item. Update with official source when confirmed.",
+    "lastChecked": "2026-06-10T08:00:00+10:00"
+  },
+  {
+    "id": "future-mega-evolution-booster-bundle",
+    "name": "Mega Evolution Booster Bundle",
+    "setName": "Mega Evolution",
+    "productType": "Booster Bundle",
+    "releaseDate": "2026-09-26",
+    "region": "Australia",
+    "availabilityStatus": "announced",
+    "sourceUrls": [],
+    "retailersToCheck": ["Big W", "JB Hi-Fi", "EB Games / Zing"],
+    "confidence": "medium",
+    "notes": "Future watchlist item. Update with official source when confirmed.",
+    "lastChecked": "2026-06-10T08:00:00+10:00"
+  },
+  {
+    "id": "future-special-collection-box-tbc",
+    "name": "Future Special Collection Box",
+    "setName": "TBC",
+    "productType": "Collection Box",
+    "region": "Australia",
+    "availabilityStatus": "announced",
+    "sourceUrls": [],
+    "retailersToCheck": ["JB Hi-Fi", "EB Games / Zing", "Big W"],
+    "confidence": "low",
+    "notes": "Date TBC. Future watchlist item for prediction testing.",
+    "lastChecked": "2026-06-10T08:00:00+10:00"
+  }
+]

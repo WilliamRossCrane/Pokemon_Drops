@@ -6,17 +6,47 @@ import EmptyState from "../../components/EmptyState.astro";
 import type { PokemonRelease, ProductType, AvailabilityStatus } from "../../types/release";
 import { PRODUCT_TYPES } from "../../types/release";
 import releasesData from "../../data/releases.generated.json";
+import futureWatchlistData from "../../data/future-watchlist.json";
+import { isFutureDatedRelease, isUpcomingWatchlist, isRestockWatch } from "../../utils/releaseFilters";
 
-const allReleases: PokemonRelease[] = releasesData.releases as PokemonRelease[];
+function mergeReleases(releases: PokemonRelease[], extra: PokemonRelease[]) {
+  const seen = new Map<string, PokemonRelease>();
+  [...releases, ...extra].forEach((release) => {
+    if (!seen.has(release.id)) {
+      seen.set(release.id, release);
+    }
+  });
+  return Array.from(seen.values());
+}
+
+const generatedReleases: PokemonRelease[] = releasesData.releases as PokemonRelease[];
+const futureWatchlist: PokemonRelease[] = futureWatchlistData as PokemonRelease[];
+const allReleases: PokemonRelease[] = mergeReleases(generatedReleases, futureWatchlist);
 const generatedAt: string = releasesData.generatedAt;
 
-// Default: sort by release date ascending, unknown dates last
-const sorted = [...allReleases].sort((a, b) => {
-  if (!a.releaseDate && !b.releaseDate) return 0;
-  if (!a.releaseDate) return 1;
-  if (!b.releaseDate) return -1;
-  return new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime();
-});
+const upcoming = [...allReleases]
+  .filter((release) => isFutureDatedRelease(release))
+  .sort((a, b) => {
+    if (!a.releaseDate) return 1;
+    if (!b.releaseDate) return -1;
+    return new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime();
+  });
+
+const upcomingWatchlist = [...allReleases]
+  .filter((release) => isUpcomingWatchlist(release))
+  .sort((a, b) => {
+    const aDate = a.releaseDate ? new Date(a.releaseDate).getTime() : Infinity;
+    const bDate = b.releaseDate ? new Date(b.releaseDate).getTime() : Infinity;
+    return aDate - bDate;
+  });
+
+const watchlist = [...allReleases]
+  .filter((release) => !isFutureDatedRelease(release) && isRestockWatch(release))
+  .sort((a, b) => {
+    if (!a.releaseDate) return 1;
+    if (!b.releaseDate) return -1;
+    return new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime();
+  });
 ---
 
 <BaseLayout
@@ -78,19 +108,67 @@ const sorted = [...allReleases].sort((a, b) => {
       ))}
     </div>
 
-    <!-- Grid -->
-    <div id="releases-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {sorted.map((release) => (
-        <div
-          class="release-card-wrapper"
-          data-product-type={release.productType}
-          data-status={release.availabilityStatus}
-          data-release-date={release.releaseDate ?? ""}
-        >
-          <ReleaseCard release={release} />
+    <!-- Upcoming drops -->
+    <section class="mb-10">
+      <div class="mb-4">
+        <h2 class="font-display font-bold text-white text-xl">Upcoming Drops</h2>
+        <p class="text-gray-400 text-sm">Future releases with confirmed dates sorted by soonest arrival.</p>
+      </div>
+      <div id="releases-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {upcoming.map((release) => (
+          <div
+            class="release-card-wrapper"
+            data-product-type={release.productType}
+            data-status={release.availabilityStatus}
+            data-release-date={release.releaseDate ?? ""}
+          >
+            <ReleaseCard release={release} />
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {upcomingWatchlist.length > 0 && (
+      <section class="mb-10">
+        <div class="mb-4">
+          <h2 class="font-display font-bold text-white text-xl">Upcoming Watchlist</h2>
+          <p class="text-gray-400 text-sm">Announced and expected items without a confirmed date.</p>
         </div>
-      ))}
-    </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {upcomingWatchlist.map((release) => (
+            <div
+              class="release-card-wrapper"
+              data-product-type={release.productType}
+              data-status={release.availabilityStatus}
+              data-release-date={release.releaseDate ?? ""}
+            >
+              <ReleaseCard release={release} />
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {watchlist.length > 0 && (
+      <section class="mb-10">
+        <div class="mb-4">
+          <h2 class="font-display font-bold text-white text-xl">Restock / Rerelease Watchlist</h2>
+          <p class="text-gray-400 text-sm">Products without a confirmed future date, worth checking as release windows approach.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {watchlist.map((release) => (
+            <div
+              class="release-card-wrapper"
+              data-product-type={release.productType}
+              data-status={release.availabilityStatus}
+              data-release-date={release.releaseDate ?? ""}
+            >
+              <ReleaseCard release={release} />
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
 
     <div id="empty-state" class="hidden">
       <EmptyState
@@ -101,7 +179,7 @@ const sorted = [...allReleases].sort((a, b) => {
 
     <!-- Count -->
     <p id="results-count" class="text-gray-600 text-xs mt-6">
-      Showing {allReleases.length} releases
+      Showing {upcoming.length + upcomingWatchlist.length + watchlist.length} releases
     </p>
   </div>
 </BaseLayout>
@@ -117,12 +195,14 @@ const sorted = [...allReleases].sort((a, b) => {
   let activeStatus = "upcoming";
   let showPast = false;
 
+  const todayDate = new Date(new Date().toISOString().slice(0, 10));
+
   function isOldRelease(card: HTMLElement) {
     const dateStr = card.dataset.releaseDate;
     const status = card.dataset.status;
     if (status === "released") return true;
     if (!dateStr) return false;
-    return new Date(dateStr) < new Date();
+    return new Date(dateStr) < todayDate;
   }
 
   function isUpcoming(card: HTMLElement) {
@@ -130,7 +210,7 @@ const sorted = [...allReleases].sort((a, b) => {
     const status = card.dataset.status;
     if (status === "released") return false;
     if (!dateStr) return true; // no date = treat as upcoming/unknown
-    return new Date(dateStr) > new Date();
+    return new Date(dateStr) >= todayDate;
   }
 
   function applyFilters() {
