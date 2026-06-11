@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-10T06:13:13.224Z",
+  "generatedAt": "2026-06-11T22:32:24.979Z",
   "releaseCount": 6,
   "releases": [
     {
@@ -27,7 +27,7 @@
       ],
       "confidence": "high",
       "notes": "Official SV09 set. Preorders confirmed live.",
-      "lastChecked": "2026-06-10T06:13:13.224Z"
+      "lastChecked": "2026-06-11T22:32:24.978Z"
     },
     {
       "id": "terastal-festival-ex-booster-box-2025-08-01",
@@ -47,7 +47,7 @@
         "Pokémon Center Australia"
       ],
       "confidence": "high",
-      "lastChecked": "2026-06-10T06:13:13.224Z"
+      "lastChecked": "2026-06-11T22:32:24.978Z"
     },
     {
       "id": "terastal-festival-ex-booster-bundle-2025-08-01",
@@ -65,7 +65,7 @@
       ],
       "confidence": "medium",
       "notes": "Big W typically stocks booster bundles and ETBs on launch day. Check in-store.",
-      "lastChecked": "2026-06-10T06:13:13.224Z"
+      "lastChecked": "2026-06-11T22:32:24.978Z"
     },
     {
       "id": "destined-rivals-elite-trainer-box-2025-11-07",
@@ -87,7 +87,7 @@
         "Pokémon Center Australia"
       ],
       "confidence": "high",
-      "lastChecked": "2026-06-10T06:13:13.224Z"
+      "lastChecked": "2026-06-11T22:32:24.978Z"
     },
     {
       "id": "destined-rivals-booster-box-2025-11-07",
@@ -106,7 +106,7 @@
         "Pokémon Center Australia"
       ],
       "confidence": "high",
-      "lastChecked": "2026-06-10T06:13:13.224Z"
+      "lastChecked": "2026-06-11T22:32:24.978Z"
     },
     {
       "id": "scarlet-violet-151-etb-possible-restock-tbc",
@@ -123,7 +123,7 @@
       ],
       "confidence": "low",
       "notes": "Kmart periodically restocks popular sets. Check in-store.",
-      "lastChecked": "2026-06-10T06:13:13.224Z"
+      "lastChecked": "2026-06-11T22:32:24.978Z"
     }
   ]
 }
